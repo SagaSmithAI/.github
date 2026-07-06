@@ -1,0 +1,88 @@
+name: Sync News to Profile README
+on:
+  schedule:
+    - cron: '0 */6 * * *'
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Fetch latest news from website repo
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          mkdir -p /tmp/news
+          page=1
+          while true; do
+            items=$(gh api repos/SagaSmithAI/SagaSmithAI.github.io/contents/news?ref=main --jq '.[].name' 2>/dev/null || echo "")
+            if [ -z "$items" ]; then break; fi
+            for file in $items; do
+              content=$(gh api repos/SagaSmithAI/SagaSmithAI.github.io/contents/news/$file?ref=main --jq '.content' 2>/dev/null || echo "")
+              if [ -n "$content" ]; then
+                echo "$content" | base64 -d > "/tmp/news/$file"
+              fi
+            done
+            break
+          done
+          ls /tmp/news/ 2>/dev/null || echo "no news found"
+
+      - name: Generate news markdown
+        run: |
+          NEWS_FILE=$(ls -1 /tmp/news/ 2>/dev/null | sort -r | head -1)
+          if [ -z "$NEWS_FILE" ]; then
+            echo "No news files found"
+            exit 0
+          fi
+
+          NEWS_MD=""
+          for f in $(ls -1 /tmp/news/ 2>/dev/null | sort -r | head -5); do
+            CONTENT=$(cat "/tmp/news/$f")
+            TITLE=$(echo "$CONTENT" | grep "^title:" | head -1 | sed 's/title: *//')
+            DATE=$(echo "$CONTENT" | grep "^date:" | head -1 | sed 's/date: *//')
+            BODY=$(echo "$CONTENT" | sed -n '/^---$/,/^---$/!p' | sed '/./,$!d')
+
+            NEWS_MD="${NEWS_MD}\n\n### ${DATE} — ${TITLE}\n\n${BODY}\n"
+          done
+
+          echo "$NEWS_MD" > /tmp/news_block.md
+          echo "News block generated"
+
+      - name: Update README
+        run: |
+          README="profile/README.md"
+          NEWS_BLOCK=$(cat /tmp/news_block.md)
+
+          # Check if markers exist
+          if grep -q "NEWS_START" "$README"; then
+            # Replace between markers
+            python3 -c "
+import re
+with open('$README', 'r') as f:
+    c = f.read()
+news = open('/tmp/news_block.md').read()
+c = re.sub(r'<!-- NEWS_START -->.*?<!-- NEWS_END -->',
+           '<!-- NEWS_START -->\n' + news + '\n<!-- NEWS_END -->',
+           c, flags=re.DOTALL)
+with open('$README', 'w') as f:
+    f.write(c)
+"
+          else
+            echo "No NEWS markers found in README"
+            exit 0
+          fi
+
+      - name: Commit and push if changed
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add profile/README.md
+          if ! git diff --cached --quiet; then
+            git commit -m "docs: sync news $(date -u +%Y-%m-%d)"
+            git push
+          else
+            echo "No changes"
+          fi

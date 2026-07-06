@@ -61,6 +61,25 @@ Agent 会：
 
 ---
 
+## 📡 更新日志 / Changelog
+
+<!-- NEWS_START -->
+
+### 2026-07-06 — SagaSmith v1.0 发布
+
+- **sagasmith-dnd/coc-ui** — Astro + React 管理面板，连接 serve API 实时展示
+- **FTS5 全文检索** — 零依赖 BM25 索引，替代 ChromaDB 日常使用场景
+- **HTTP API serve** — CLI 一键启动，前端直连数据库
+- **Standalone 轻量版** — 纯 Python 标准库，无 pip 也能用
+
+安装：`pip install "sagasmith-dnd[documents]"`
+
+<!-- NEWS_END -->
+
+> 完整更新日志见 [SagaSmithAI.github.io](https://SagaSmithAI.github.io)
+
+---
+
 ## 许可证 / License
 
 代码 MIT。D&D 5e SRD 5.2.1 © Wizards of the Coast，以 [CC-BY-4.0](https://creativecommons.org/licenses/by/4.0/) 授权使用。
