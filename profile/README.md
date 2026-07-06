@@ -1,7 +1,7 @@
 # 🐉 SagaSmith AI
 
 <p align="center">
-  <img src="https://raw.githubusercontent.com/SagaSmithAI/SagaSmith-dnd-skills/main/full/images/Sagasmith.png" alt="SagaSmith" width="200">
+  <img src="sagasmith.png" alt="SagaSmith" width="200">
 </p>
 
 <p align="center">
