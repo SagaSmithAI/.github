@@ -40,16 +40,18 @@
 flowchart TB
     H[玩家 · GM · 创作者] --> A[SagaSmith Agent<br/>身份 · 会话 · 多渠道]
     A --> X[MCP 会话暴露层<br/>lobby · play · combat]
-    X --> M[D&D MCP<br/>tools · resources · prompts]
+    X --> M[Domain MCPs<br/>D&D · CoC]
     M --> S[Agent Skills<br/>主持流程 · 内容创作]
     M --> D[D&D 规则运行时<br/>规则包 · 战斗 · 空间]
     D --> C[SagaSmith Core<br/>战役 · 角色 · 知识 · 分支 · 导入]
     C --> P[(SQLite · FTS5 · ChromaDB optional)]
-    U[D&D DM Workbench<br/>Alpha] -. 观察与操作界面 .-> M
-    R[CoC 7e runtime + skills] --> C
+    U[D&D DM Workbench<br/>Scene Atlas · Combat Map] --> G[Principal-aware HTTP/SSE Gateway]
+    G --> M
+    M --> R[CoC 7e runtime + skills]
+    R --> C
 ```
 
-一次完整路径可以从 lobby 中导入规则书、模组与角色开始，进入 play 后按场景推进与更新 actor knowledge，在 combat 中临时加载战斗工具和地图，最后写入事件、记忆与 Snapshot。工具暴露由 MCP 服务端按会话和阶段管理，因此不依赖某一个 Agent Host 的私有实现。
+一次完整路径可以从 lobby 中导入规则书、模组与角色开始，进入 play 后按 Scene Atlas 推进并更新 actor knowledge，在 combat 中从 Scene Spatial 证据创建临时五尺格地图，最后写入事件、记忆与 Snapshot。工具暴露由 MCP 服务端按会话和阶段管理，因此不依赖某一个 Agent Host 的私有实现；UI Gateway 的写请求也实际调用 MCP 工具，不直写数据库。
 
 ## 从哪里开始
 
@@ -57,6 +59,7 @@ flowchart TB
 |---|---|---|
 | 直接搭建可聊天的 AI GM | [SagaSmith-agent](https://github.com/SagaSmithAI/SagaSmith-agent) | 多渠道 Agent、身份、会话和 MCP 编排 |
 | 给现有 Agent 接入完整 D&D 能力 | [SagaSmith-dnd-mcp](https://github.com/SagaSmithAI/SagaSmith-dnd-mcp) | 当前最完整的端到端参考实现 |
+| 给现有 Agent 接入 CoC 7e 能力 | [SagaSmith-coc-mcp](https://github.com/SagaSmithAI/SagaSmith-coc-mcp) | session exposure、调查/SAN/战斗/追逐与角色知识 |
 | 构建新的 TTRPG 系统 | [sagasmith-core](https://github.com/SagaSmithAI/Sagasmith-core) | 系统无关的数据、分支、知识、导入与检索服务 |
 | 使用或扩展 D&D 规则运行时 | [sagasmith-dnd](https://github.com/SagaSmithAI/Sagasmith-dnd) | D&D 5e 2014/2024 规则、内容和战斗引擎 |
 | 使用 CoC 7e 运行时 | [sagasmith-coc](https://github.com/SagaSmithAI/Sagasmith-coc) | d100、SAN、战斗、追逐与模组解析 |
@@ -69,13 +72,14 @@ flowchart TB
 |---|---|---|---|
 | Agent | [SagaSmith-agent](https://github.com/SagaSmithAI/SagaSmith-agent) | 多渠道、模型、会话、身份、MCP client | Alpha，主要入口 |
 | MCP | [SagaSmith-dnd-mcp](https://github.com/SagaSmithAI/SagaSmith-dnd-mcp) | D&D 能力面、存储所有权、渐进式工具暴露 | D&D 参考实现 |
+| MCP | [SagaSmith-coc-mcp](https://github.com/SagaSmithAI/SagaSmith-coc-mcp) | CoC 能力面、角色授权、渐进式工具暴露 | 可实测垂直链路 |
 | Core | [sagasmith-core](https://github.com/SagaSmithAI/Sagasmith-core) | 系统无关持久化、导入、检索、分支与知识 | Python library |
 | System | [sagasmith-dnd](https://github.com/SagaSmithAI/Sagasmith-dnd) | D&D 5e 2014/2024 规则与战斗 | 活跃开发 |
 | System | [sagasmith-coc](https://github.com/SagaSmithAI/Sagasmith-coc) | Call of Cthulhu 7e 规则运行时 | 活跃开发 |
 | Skills | [SagaSmith-dnd-skills](https://github.com/SagaSmithAI/SagaSmith-dnd-skills) | D&D 主持和战役管理方法 | MCP-first full + portable |
 | Skills | [SagaSmith-coc-skills](https://github.com/SagaSmithAI/SagaSmith-coc-skills) | CoC 守秘与调查团管理方法 | CLI full + portable |
 | Creation | [SagaSmith-module-gen-skills](https://github.com/SagaSmithAI/SagaSmith-module-gen-skills) | 结构化冒险生成 | Agent skill |
-| UI | [sagasmith-dnd-ui](https://github.com/SagaSmithAI/sagasmith-dnd-ui) | D&D DM 工作台 | Alpha |
+| UI | [sagasmith-dnd-ui](https://github.com/SagaSmithAI/sagasmith-dnd-ui) | Scene Atlas、空间证据、临时战斗地图 | Integrated Alpha，可开始本地实测 |
 | UI | [sagasmith-coc-ui](https://github.com/SagaSmithAI/sagasmith-coc-ui) | CoC Keeper 工作台 | Prototype |
 | UI | [sagasmith-ui](https://github.com/SagaSmithAI/sagasmith-ui) | 跨系统客户端探索 | Prototype |
 | Web | [SagaSmithAI.github.io](https://github.com/SagaSmithAI/SagaSmithAI.github.io) | 官网、架构和生态入口 | Static site |
@@ -102,6 +106,6 @@ flowchart TB
 
 ## 项目状态
 
-SagaSmithAI 仍处于 **Alpha / active development**。D&D MCP 路径拥有最完整的规则、记忆、内容导入、战斗和会话暴露覆盖；CoC 与 UI 正在向同一边界演进。当前适合本地开发、集成验证与实团测试，不应被视作托管式商业 VTT 或规则内容分发服务。
+SagaSmithAI 仍处于 **Alpha / active development**。D&D MCP 路径已覆盖规则、记忆、内容导入、会话 exposure、多人投影、Scene Atlas、临时战斗地图与 UI Gateway；CoC 正在向同一能力边界演进。当前适合本地开发、集成验证与实团测试，不应被视作托管式商业 VTT 或规则内容分发服务。
 
 代码默认使用 MIT License。D&D SRD 派生内容遵循对应的 Creative Commons 许可与仓库内 NOTICE；商业规则内容不包含在发行物中。

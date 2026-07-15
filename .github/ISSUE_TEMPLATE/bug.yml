@@ -1,0 +1,41 @@
+name: Bug report
+description: Report a reproducible SagaSmithAI defect
+title: "[Bug]: "
+labels: [bug]
+body:
+  - type: dropdown
+    id: layer
+    attributes:
+      label: Affected layer
+      options: [Agent, MCP, Core, Rules runtime, Skills, UI, Website]
+    validations:
+      required: true
+  - type: input
+    id: version
+    attributes:
+      label: Repository and commit or release
+      placeholder: SagaSmith-dnd-mcp @ abc1234
+    validations:
+      required: true
+  - type: textarea
+    id: reproduction
+    attributes:
+      label: Minimal reproduction
+      description: Remove secrets, commercial content, and private campaign data.
+    validations:
+      required: true
+  - type: textarea
+    id: expected
+    attributes:
+      label: Expected and actual behavior
+    validations:
+      required: true
+  - type: checkboxes
+    id: safety
+    attributes:
+      label: Safety check
+      options:
+        - label: I removed credentials, private campaign data, and copyrighted source text.
+          required: true
+        - label: This is not a security vulnerability requiring private reporting.
+          required: true
