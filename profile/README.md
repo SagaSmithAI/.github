@@ -108,4 +108,4 @@ flowchart TB
 
 SagaSmithAI 仍处于 **Alpha / active development**。D&D MCP 路径已覆盖规则、记忆、内容导入、会话 exposure、多人投影、Scene Atlas、临时战斗地图与 UI Gateway；CoC 正在向同一能力边界演进。当前适合本地开发、集成验证与实团测试，不应被视作托管式商业 VTT 或规则内容分发服务。
 
-代码默认使用 MIT License。D&D SRD 派生内容遵循对应的 Creative Commons 许可与仓库内 NOTICE；商业规则内容不包含在发行物中。
+原创代码默认使用 Apache-2.0。D&D SRD 派生内容遵循对应的 Creative Commons 许可与仓库内 NOTICE；商业规则内容不包含在发行物中。
