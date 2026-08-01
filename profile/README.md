@@ -32,6 +32,7 @@
 - **战役可延续** — Snapshot DAG、分支、事件、修订式记忆与 continuity context 共同维护长期世界，而不是只保存聊天摘要。
 - **知识有边界** — PC、NPC、玩家与 GM 各自拥有访问范围和 actor knowledge，避免隐藏信息与兄弟时间线串线。
 - **内容可落地** — 规则书与模组从 PDF/Markdown 进入结构化导入、质量检查、检索、场景索引和规则包，而不是停留在向量片段。
+- **内容可迁移** — PC、NPC、怪物共享同一可校验角色卡；Scene Atlas、资产、审核内容和预设角色可组成结构化模组包；标准 SRD 怪物以默认预设包提供。
 - **系统可扩展** — `sagasmith-core` 保持规则无关；D&D 5e 和 CoC 7e 通过系统插件扩展，规则包与内容包可独立演进。
 
 ## 平台闭环
@@ -51,7 +52,7 @@ flowchart TB
     R --> C
 ```
 
-一次完整路径可以从 lobby 中导入规则书、模组与角色开始，进入 play 后按 Scene Atlas 推进并更新 actor knowledge，在 combat 中从 Scene Spatial 证据创建临时五尺格地图，最后写入事件、记忆与 Snapshot。工具暴露由 MCP 服务端按会话和阶段管理，因此不依赖某一个 Agent Host 的私有实现；UI Gateway 的写请求也实际调用 MCP 工具，不直写数据库。
+一次完整路径可以从 lobby 中导入规则书、可分享模组包与统一角色卡开始，进入 play 后按 Scene Atlas 推进并更新 actor knowledge，在 combat 中从 Scene Spatial 证据创建临时五尺格地图，最后写入事件、记忆与 Snapshot。工具暴露由 MCP 服务端按会话和阶段管理，因此不依赖某一个 Agent Host 的私有实现；UI Gateway 的写请求也实际调用 MCP 工具，不直写数据库。
 
 ## 从哪里开始
 
@@ -91,10 +92,18 @@ flowchart TB
 3. **自动结算不取代 GM 判断。** 输入已经确定且规则机械化时自动结算；目标、意图、视线、例外和叙事代价不明确时请求裁决。
 4. **检索不是权威状态。** FTS/向量检索负责找候选；关系数据库、规则包锁定与分支祖先链负责决定有效事实。
 5. **商业内容不随代码分发。** 用户只能导入自己有权使用的规则书和模组；派生索引保留来源与版本信息。
+6. **内容包不是存档。** Portable card/module/preset pack 使用 checksum 与新身份导入；权限、ActorKnowledge、进度、随机流和 Snapshot 不随内容包迁移。
 
 ## News
 
 <!-- NEWS_START -->
+
+### 2026-08-02 — 统一可分享角色卡与结构化模组包
+
+PC、NPC 与怪物现在使用同一个 portable actor-card 边界；SRD 2014/2024
+怪物与 NPC 作为默认 preset pack 提供。结构化模组可以携带 Scene Atlas、
+checksum-bound 资产、审核内容、NPC/怪物/预设 PC 卡及稳定关联，并通过公开 MCP
+路径在另一安装中生成全新身份。战役进度、角色知识、分支与 Snapshot 保持隔离。
 
 ### 2026-07-15 — SagaSmithAI 转向 AI 原生 TTRPG 平台
 
