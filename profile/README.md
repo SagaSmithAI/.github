@@ -32,7 +32,7 @@
 - **战役可延续** — Snapshot DAG、分支、事件、修订式记忆与 continuity context 共同维护长期世界，而不是只保存聊天摘要。
 - **知识有边界** — PC、NPC、玩家与 GM 各自拥有访问范围和 actor knowledge，避免隐藏信息与兄弟时间线串线。
 - **内容可落地** — 规则书与模组从 PDF/Markdown 进入结构化导入、质量检查、检索、场景索引和规则包，而不是停留在向量片段。
-- **内容可迁移** — PC、NPC、怪物共享同一可校验角色卡；Scene Atlas、资产、审核内容和预设角色可组成结构化模组包；标准 SRD 怪物以默认预设包提供。
+- **内容可迁移** — 核心规则、Addon、模组和预设共用一个可校验归档；PC、NPC、怪物共享角色卡，原文、Scene Atlas、资产、角色图、审核内容和稳定引用随包迁移。
 - **系统可扩展** — `sagasmith-core` 保持规则无关；D&D 5e 和 CoC 7e 通过系统插件扩展，规则包与内容包可独立演进。
 
 ## 平台闭环
@@ -66,6 +66,7 @@ flowchart TB
 | 使用 CoC 7e 运行时 | [sagasmith-coc](https://github.com/SagaSmithAI/Sagasmith-coc) | d100、SAN、战斗、追逐与模组解析 |
 | 给 Agent 安装主持流程 | [D&D Skills](https://github.com/SagaSmithAI/SagaSmith-dnd-skills) / [CoC Skills](https://github.com/SagaSmithAI/SagaSmith-coc-skills) | 可移植的 SKILL.md 工作流与参考资料 |
 | 生成可导入的冒险模组 | [Module Generator Skills](https://github.com/SagaSmithAI/SagaSmith-module-gen-skills) | 25 种结构范式和分阶段生成流程 |
+| 浏览与下载 D&D 内容包 | [D&D Content Library](https://sagasmithai.github.io/SagaSmith-dnd-content-library/) | 公共实例发布开放许可 SRD 包；同一 UI 可浏览本地私有 core rules/addon/module/preset 与角色图 |
 
 ## 仓库地图
 
@@ -84,6 +85,7 @@ flowchart TB
 | UI | [sagasmith-coc-ui](https://github.com/SagaSmithAI/sagasmith-coc-ui) | CoC Keeper 工作台 | Prototype |
 | UI | [sagasmith-ui](https://github.com/SagaSmithAI/sagasmith-ui) | 跨系统客户端探索 | Prototype |
 | Web | [SagaSmithAI.github.io](https://github.com/SagaSmithAI/SagaSmithAI.github.io) | 官网、架构和生态入口 | Static site |
+| Content | [SagaSmith-dnd-content-library](https://github.com/SagaSmithAI/SagaSmith-dnd-content-library) | 统一内容包、来源/资产 blobs 与可视化目录 | GitHub Pages |
 
 ## 设计边界
 
@@ -92,18 +94,21 @@ flowchart TB
 3. **自动结算不取代 GM 判断。** 输入已经确定且规则机械化时自动结算；目标、意图、视线、例外和叙事代价不明确时请求裁决。
 4. **检索不是权威状态。** FTS/向量检索负责找候选；关系数据库、规则包锁定与分支祖先链负责决定有效事实。
 5. **商业内容不随代码分发。** 用户只能导入自己有权使用的规则书和模组；派生索引保留来源与版本信息。
-6. **内容包不是存档。** Portable card/module/preset pack 使用 checksum 与新身份导入；权限、ActorKnowledge、进度、随机流和 Snapshot 不随内容包迁移。
+6. **内容包不是存档。** `sagasmith.content-package` 以 checksum、稳定来源引用和新运行时身份导入；权限、ActorKnowledge、进度、随机流和 Snapshot 不随内容包迁移，导入也不自动授予分支启用权限。
 
 ## News
 
 <!-- NEWS_START -->
 
-### 2026-08-02 — 统一可分享角色卡与结构化模组包
+### 2026-08-02 — 统一可分享角色卡、结构化模组与扩展规则包
 
-PC、NPC 与怪物现在使用同一个 portable actor-card 边界；SRD 2014/2024
-怪物与 NPC 作为默认 preset pack 提供。结构化模组可以携带 Scene Atlas、
-checksum-bound 资产、审核内容、NPC/怪物/预设 PC 卡及稳定关联，并通过公开 MCP
+PC、NPC 与怪物现在使用同一个 `sagasmith.actor-card.v3` 边界；默认怪物与 NPC
+作为 preset 内容包提供。核心规则、Addon、模组和预设共用 `.sagasmith-pack`；
+结构化模组可以携带原文、Scene Atlas、checksum-bound 资产、角色图、审核内容、NPC/怪物/预设 PC 卡及稳定关联，并通过公开 MCP
 路径在另一安装中生成全新身份。战役进度、角色知识、分支与 Snapshot 保持隔离。
+扩展规则书现在也能导出完整索引来源和稳定 citation，目标端重建本地 source/chunk
+id 后安装内容定义；安装与战役启用仍是独立审批。旧 portable JSON、松散卡片、
+release manifest 与 `.sagasmith-module` 不再属于公开协议。
 
 ### 2026-07-15 — SagaSmithAI 转向 AI 原生 TTRPG 平台
 
