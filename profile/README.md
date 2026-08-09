@@ -52,7 +52,7 @@ flowchart TB
     R --> C
 ```
 
-一次完整路径可以从 lobby 中导入规则书、可分享模组包与统一角色卡开始，进入 play 后按 Scene Atlas 推进并更新 actor knowledge，在 combat 中从 Scene Spatial 证据创建临时五尺格地图，最后写入事件、记忆与 Snapshot。工具暴露由 MCP 服务端按会话和阶段管理，因此不依赖某一个 Agent Host 的私有实现；UI Gateway 的写请求也实际调用 MCP 工具，不直写数据库。
+一次完整路径从 lobby 中用 `rulebook_draft` / `module_draft` 完成机械首轮、Agent 审稿与定稿，再由 `content_pack` 管理不可变 Pack；进入 play 后按 Scene Atlas 推进并更新 actor knowledge。combat 固定 `grid` 或 `agent` 空间模式：前者使用临时地图和完整坐标，后者由 Agent 提交逐动作空间事实。最后写入事件、记忆与 Snapshot。工具暴露由 MCP 服务端按会话和阶段管理，因此不依赖某一个 Agent Host 的私有实现；UI Gateway 的写请求也实际调用 MCP 工具，不直写数据库。
 
 ## 从哪里开始
 
@@ -91,7 +91,7 @@ flowchart TB
 
 1. **Agent 不拥有领域数据库。** Agent 负责会话、身份和调度；领域 MCP 拥有规则、模组、战役数据与写入过程。
 2. **Skills 不伪装成引擎。** Skills 描述策略与流程；可结算的状态变化必须经过 MCP/规则运行时。
-3. **自动结算不取代 GM 判断。** 输入已经确定且规则机械化时自动结算；目标、意图、视线、例外和叙事代价不明确时请求裁决。
+3. **引擎与 Agent 各自裁决。** 输入已经确定且规则机械化时由引擎结算；来源无冲突的目标、意图、无坐标空间关系、例外和叙事代价由 Agent 判断。只有玩家选择、Owner 审批、权限变化或缺失/冲突来源需要外部输入。
 4. **检索不是权威状态。** FTS/向量检索负责找候选；关系数据库、规则包锁定与分支祖先链负责决定有效事实。
 5. **商业内容不随代码分发。** 用户只能导入自己有权使用的规则书和模组；派生索引保留来源与版本信息。
 6. **内容包不是存档。** `sagasmith.content-package` 以 checksum、稳定来源引用和新运行时身份导入；权限、ActorKnowledge、进度、随机流和 Snapshot 不随内容包迁移，导入也不自动授予分支启用权限。
@@ -107,7 +107,7 @@ PC、NPC 与怪物现在使用同一个 `sagasmith.actor-card.v3` 边界；默�
 结构化模组可以携带原文、Scene Atlas、checksum-bound 资产、角色图、审核内容、NPC/怪物/预设 PC 卡及稳定关联，并通过公开 MCP
 路径在另一安装中生成全新身份。战役进度、角色知识、分支与 Snapshot 保持隔离。
 扩展规则书现在也能导出完整索引来源和稳定 citation，目标端重建本地 source/chunk
-id 后安装内容定义；安装与战役启用仍是独立审批。旧 portable JSON、松散卡片、
+id 后保存内容定义；Pack 保存与战役启用仍是独立权限操作。旧 portable JSON、松散卡片、
 release manifest 与 `.sagasmith-module` 不再属于公开协议。
 
 ### 2026-07-15 — SagaSmithAI 转向 AI 原生 TTRPG 平台
