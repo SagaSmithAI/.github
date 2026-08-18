@@ -11,9 +11,11 @@ The current default branch of each active repository receives security fixes. Ta
 ## Security boundaries
 
 - MCP stdio servers are intended for trusted local execution. Remote HTTP/SSE adapters require explicit authentication, origin policy, and network allowlists.
+- `SagaSmith-service` is an Internet-facing orchestration layer. Account, room, identity, object-storage, internal-service, quota, and Agent credentials must remain server-side, and every domain action must be re-authorized by the target MCP.
 - Agent-supplied principal identifiers are not trusted. Hosts must inject a principal derived from the authenticated channel, and MCP servers must enforce campaign and actor grants.
 - Player-visible responses must not contain GM-only rules, scenes, hidden combatants, private actor knowledge, or another branch's state.
 - Imported PDFs, rulebooks, modules, templates, and skill assets are untrusted input. Enforce allowlisted roots, size/type limits, content-addressed storage, and provenance.
 - Never submit provider keys, bot tokens, local config files, campaign databases, Chroma stores, imported commercial content, or generated artifacts containing private play data.
+- Public repository visibility is not evidence that a Content Pack or embedded asset may be redistributed; report accidental publication of restricted source material privately.
 
 Security fixes should include a regression test that demonstrates the prior boundary failure without publishing sensitive production data.
