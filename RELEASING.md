@@ -6,8 +6,8 @@ SagaSmithAI repositories version and release independently. A platform milestone
 
 - Python packages and MCP servers use Semantic Versioning.
 - `0.x` minor releases may change public contracts, but the change must be documented and coordinated with direct consumers.
-- UIs and Skills use dated or semantic tags once they have a distributable artifact; before that, the default branch is the only supported channel.
-- System plugins declare compatible `sagasmith-core` ranges. Domain MCPs declare compatible Core and system-runtime ranges.
+- Domain monorepo tags version the compatible Domain, MCP, Skills, UI, and generator set together.
+- Domain packages declare compatible `sagasmith-core` ranges; deployers pin the exact domain repository revision.
 
 ## Required release evidence
 
@@ -19,7 +19,7 @@ SagaSmithAI repositories version and release independently. A platform milestone
 6. A changelog entry states breaking changes, upgrade steps, known limitations, and the compatibility set.
 7. The release contains no secrets, local state, imported commercial books, or campaign data.
 8. A Content Library publication records each Pack checksum and rights metadata; repository visibility alone is never treated as redistribution approval.
-9. A hosted Service compatibility set pins exact Agent, Core, system, MCP, and Skills revisions and proves a real Lobby -> Play -> Combat -> Play or system-equivalent path.
+9. A hosted Service compatibility set pins exact Agent, Core, and domain-monorepo revisions and proves a real Lobby -> Play -> Combat -> Play or system-equivalent path.
 
 ## Tagging
 
