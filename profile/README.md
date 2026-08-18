@@ -19,7 +19,7 @@
   <a href="https://github.com/SagaSmithAI/SagaSmith-agent">Start with the Agent</a> ·
   <a href="https://github.com/SagaSmithAI/SagaSmith-service">Hosted Service</a> ·
   <a href="https://github.com/SagaSmithAI/SagaSmith-dnd-content-library">Content Catalog</a> ·
-  <a href="https://github.com/SagaSmithAI/SagaSmith-dnd-mcp">D&D MCP</a> ·
+  <a href="https://github.com/SagaSmithAI/sagasmith-dnd">D&D Domain</a> ·
   <a href="https://github.com/orgs/SagaSmithAI/repositories">All repositories</a>
 </p>
 
@@ -64,14 +64,14 @@ flowchart TB
 |---|---|---|
 | 直接搭建可聊天的 AI GM | [SagaSmith-agent](https://github.com/SagaSmithAI/SagaSmith-agent) | 多渠道 Agent、身份、会话和 MCP 编排 |
 | 运行托管账户与多人房间 | [SagaSmith-service](https://github.com/SagaSmithAI/SagaSmith-service) | 公开源码仓库；账户、配额、房间、Agent 调度与多系统编排 |
-| 给现有 Agent 接入完整 D&D 能力 | [SagaSmith-dnd-mcp](https://github.com/SagaSmithAI/SagaSmith-dnd-mcp) | 当前最完整的端到端参考实现 |
-| 给现有 Agent 接入 CoC 7e 能力 | [SagaSmith-coc-mcp](https://github.com/SagaSmithAI/SagaSmith-coc-mcp) | session exposure、调查/SAN/战斗/追逐与角色知识 |
+| 给现有 Agent 接入完整 D&D 能力 | [sagasmith-dnd](https://github.com/SagaSmithAI/sagasmith-dnd) | Domain、MCP、Skills、UI 与模组生成的完整垂直实现 |
+| 给现有 Agent 接入 CoC 7e 能力 | [sagasmith-coc](https://github.com/SagaSmithAI/sagasmith-coc) | Domain、MCP、Skills、UI 与模组生成的完整垂直实现 |
 | 构建新的 TTRPG 系统 | [sagasmith-core](https://github.com/SagaSmithAI/Sagasmith-core) | 系统无关的数据、分支、知识、导入与检索服务 |
 | 使用或扩展 D&D 规则运行时 | [sagasmith-dnd](https://github.com/SagaSmithAI/Sagasmith-dnd) | D&D 5e 2014/2024 规则、内容和战斗引擎 |
 | 使用 CoC 7e 运行时 | [sagasmith-coc](https://github.com/SagaSmithAI/Sagasmith-coc) | d100、SAN、战斗、追逐与模组解析 |
-| 构建系统无关长线叙事 | [SagaSmith-narrative-mcp](https://github.com/SagaSmithAI/SagaSmith-narrative-mcp) | profile-bound 叙事、连续性、角色知识与可选冲突阶段 |
-| 给 Agent 安装主持流程 | [D&D Skills](https://github.com/SagaSmithAI/SagaSmith-dnd-skills) / [CoC Skills](https://github.com/SagaSmithAI/SagaSmith-coc-skills) | 可移植的 SKILL.md 工作流与参考资料 |
-| 生成可导入的冒险模组 | [Module Generator Skills](https://github.com/SagaSmithAI/SagaSmith-module-gen-skills) | 25 种结构范式和分阶段生成流程 |
+| 构建系统无关长线叙事 | [sagasmith-narrative](https://github.com/SagaSmithAI/sagasmith-narrative) | Domain、stdio MCP、Skills、连续性与项目生成 |
+| 给 Agent 安装主持流程 | [D&D Skills](https://github.com/SagaSmithAI/sagasmith-dnd/tree/main/skills) / [CoC Skills](https://github.com/SagaSmithAI/sagasmith-coc/tree/main/skills) / [Narrative Skills](https://github.com/SagaSmithAI/sagasmith-narrative/tree/main/skills) | 随领域代码共同版本化的 SKILL.md 工作流与参考资料 |
+| 生成可导入的冒险模组 | [D&D generator](https://github.com/SagaSmithAI/sagasmith-dnd/tree/main/skills/dnd-module-generator) / [CoC generator](https://github.com/SagaSmithAI/sagasmith-coc/tree/main/skills/coc-module-generator) | 分系统的来源解释和分阶段生成流程 |
 | 浏览当前内容包目录 | [Content Pack Library](https://github.com/SagaSmithAI/SagaSmith-dnd-content-library) | 公开仓库与校验和索引；每个 Pack 仍保留独立许可和分发限制 |
 
 ## 仓库地图
@@ -80,19 +80,10 @@ flowchart TB
 |---|---|---|---|
 | Agent | [SagaSmith-agent](https://github.com/SagaSmithAI/SagaSmith-agent) | 多渠道、模型、会话、身份、MCP client | Alpha，主要入口 |
 | Service | [SagaSmith-service](https://github.com/SagaSmithAI/SagaSmith-service) | 托管账户、房间、配额、Agent 调度、Web 与多系统编排 | Public source，专有许可 |
-| MCP | [SagaSmith-dnd-mcp](https://github.com/SagaSmithAI/SagaSmith-dnd-mcp) | D&D 能力面、存储所有权、渐进式工具暴露 | D&D 参考实现 |
-| MCP | [SagaSmith-coc-mcp](https://github.com/SagaSmithAI/SagaSmith-coc-mcp) | CoC 能力面、角色授权、渐进式工具暴露 | 可实测垂直链路 |
-| MCP | [SagaSmith-narrative-mcp](https://github.com/SagaSmithAI/SagaSmith-narrative-mcp) | 系统无关叙事 profile、连续性、角色知识与冲突能力 | 可实测夹具与真实 Host 回归 |
 | Core | [sagasmith-core](https://github.com/SagaSmithAI/Sagasmith-core) | 系统无关持久化、导入、检索、分支与知识 | Python library |
-| System | [sagasmith-dnd](https://github.com/SagaSmithAI/Sagasmith-dnd) | D&D 5e 2014/2024 规则与战斗 | 活跃开发 |
-| System | [sagasmith-coc](https://github.com/SagaSmithAI/Sagasmith-coc) | Call of Cthulhu 7e 规则运行时 | 活跃开发 |
-| Skills | [SagaSmith-dnd-skills](https://github.com/SagaSmithAI/SagaSmith-dnd-skills) | D&D 主持和战役管理方法 | MCP-first full + portable |
-| Skills | [SagaSmith-coc-skills](https://github.com/SagaSmithAI/SagaSmith-coc-skills) | CoC 守秘与调查团管理方法 | MCP-first full + standalone demo |
-| Skills | [SagaSmith-narrative-skills](https://github.com/SagaSmithAI/SagaSmith-narrative-skills) | 系统无关长线叙事、NPC 对话与连续性方法 | MCP-first |
-| Creation | [SagaSmith-module-gen-skills](https://github.com/SagaSmithAI/SagaSmith-module-gen-skills) | 结构化冒险生成 | Agent skill |
-| UI | [sagasmith-dnd-ui](https://github.com/SagaSmithAI/sagasmith-dnd-ui) | Scene Atlas、空间证据、临时战斗地图 | Integrated Alpha，可开始本地实测 |
-| UI | [sagasmith-coc-ui](https://github.com/SagaSmithAI/sagasmith-coc-ui) | CoC Keeper 工作台 | Prototype |
-| UI | [sagasmith-ui](https://github.com/SagaSmithAI/sagasmith-ui) | 跨系统客户端探索 | Prototype |
+| Domain | [sagasmith-dnd](https://github.com/SagaSmithAI/sagasmith-dnd) | D&D 规则、MCP、Skills、UI 与模组生成 | 可实测垂直链路 |
+| Domain | [sagasmith-coc](https://github.com/SagaSmithAI/sagasmith-coc) | CoC 规则、MCP、Skills、UI 与模组生成 | 可实测垂直链路 |
+| Domain | [sagasmith-narrative](https://github.com/SagaSmithAI/sagasmith-narrative) | 系统无关叙事 Domain、stdio MCP、Skills 与项目生成 | 可实测夹具与真实 Host 回归 |
 | Web | [SagaSmithAI.github.io](https://github.com/SagaSmithAI/SagaSmithAI.github.io) | 官网、架构和生态入口 | Static site |
 | Content | [SagaSmith-dnd-content-library](https://github.com/SagaSmithAI/SagaSmith-dnd-content-library) | D&D/CoC 当前统一内容包、来源/资产 blobs 与机器索引 | Public repository；内容权利逐包判断 |
 
@@ -108,6 +99,12 @@ flowchart TB
 ## News
 
 <!-- NEWS_START -->
+
+### 2026-08-19 — 三条领域链路收敛为垂直 monorepo
+
+D&D、CoC 与 Narrative 现在各由一个领域仓库共同版本化 Domain、MCP、Skills、领域 UI
+（如有）和对应的创作生成流程。`sagasmith-core`、Agent、Service、内容目录与官网继续独立；
+原来的 MCP、Skills、UI 和通用 Module Generator 仓库进入归档迁移阶段。
 
 ### 2026-08-18 — 托管 Service 与当前 Content Pack 目录公开
 
