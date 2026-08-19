@@ -101,43 +101,88 @@ flowchart TB
 
 <!-- NEWS_START -->
 
-### 2026-08-20 — 最新运行时完成并行参考战役回归
 
-长回归现在会从当前 Agent、Core、D&D、CoC、Narrative 与 Service 源码重建托管栈，
-再以隔离客户端并发运行 D&D 与 CoC 参考战役。两条路径均完成且没有记录到回归缺口，
-D&D 额外写入一个合法结局；每个 campaign 的日志、运行时 revision 与总结果都保存为
-机器可读证据。目录中未实际执行的模组和互斥路径继续明确列为 exclusion，不会被当作
-隐式通过。Service → Agent → MCP 的 principal context 同时切换为带时效签名协议。
+### 2026-08-20 — 最新运行时完成 D&D 与 CoC 并行参考战役回归
 
-### 2026-08-19 — 三条领域链路收敛为垂直 monorepo
+长回归会先从当前 `SagaSmith-agent`、`sagasmith-core`、三个领域仓库与
+`SagaSmith-service` 源码重建并重建容器，再开始任何房间动作。Service 使用临时共享
+密钥签发带时效的 `sagasmith.auth-context/v1`，Agent 将 principal context 传给
+会话作用域 MCP；领域服务仍在实际调用边界重新校验身份、角色、战役与 revision。
 
-D&D、CoC 与 Narrative 现在各由一个领域仓库共同版本化 Domain、MCP、Skills、领域 UI
-（如有）和对应的创作生成流程。`sagasmith-core`、Agent、Service、内容目录与官网继续独立；
-原来的 MCP、Skills、UI 和通用 Module Generator 仓库已归档为只读历史。这些领域
-组件的当前开发、发布、Issue 与文档入口仅为三个领域 monorepo。
+2026-08-20 的参考运行以隔离客户端并发完成 D&D 与 CoC 战役，没有记录到回归缺口；
+D&D 路径额外记录了一个合法结局。`runtime-refresh.json`、`summary.json` 与逐战役日志
+保存了构建 revision、调用结果和缺口列表。
 
-### 2026-08-18 — 托管 Service 与当前 Content Pack 目录公开
+runner 会发现目录中的全部当前模组，并把没有执行的项目与互斥路径写成机器可读
+exclusion。这条结果证明当前参考集成边界可以工作，不代表全部 46 个 Pack 或每条剧情
+分支都已经完整通关。
 
-`SagaSmith-service` 与 `SagaSmith-dnd-content-library` 现为公开仓库。Service 已接通
-D&D/CoC 多系统房间、托管主持身份、结构化回合与 audience-safe resolution
-presentation；内容目录公开 46 个校验和绑定的当前 Pack 记录。仓库可见性不改变
-Service 的专有许可，也不替代每个 Pack、来源和资产自己的使用与分发授权。
 
-### 2026-08-02 — 统一可分享角色卡、结构化模组与扩展规则包
+### 2026-08-19 — D&D、CoC 与 Narrative 完成垂直仓库收敛
 
-PC、NPC 与怪物现在使用同一个 `sagasmith.actor-card.v3` 边界；默认怪物与 NPC
-作为 preset 内容包提供。核心规则、Addon、模组和预设共用 `.sagasmith-pack`；
-结构化模组可以携带原文、Scene Atlas、checksum-bound 资产、角色图、审核内容、NPC/怪物/预设 PC 卡及稳定关联，并通过公开 MCP
-路径在另一安装中生成全新身份。战役进度、角色知识、分支与 Snapshot 保持隔离。
-扩展规则书现在也能导出完整索引来源和稳定 citation，目标端重建本地 source/chunk
-id 后保存内容定义；Pack 保存与战役启用仍是独立权限操作。旧 portable JSON、松散卡片、
-release manifest 与 `.sagasmith-module` 不再属于公开协议。
+`sagasmith-dnd`、`sagasmith-coc` 与 `sagasmith-narrative` 现在分别作为一条
+完整领域链路的唯一源码入口。每个仓库共同版本化确定性 Domain、权威 MCP、Agent
+Skills、领域 UI（如有）和对应的 Pack/项目创作流程，同时继续保持各组件的运行时
+职责与权限边界。
 
-### 2026-07-15 — SagaSmithAI 转向 AI 原生 TTRPG 平台
+原独立 MCP、Skills、UI 和通用 Module Generator 仓库已经归档。它们仍可用于历史
+审计，但不再接收当前 Issue、发布或集成，也不会被 Agent、Service 或安装器作为
+兼容回退。
 
-品牌与仓库信息架构统一为 AI-native TTRPG platform。D&D 参考路径现在明确为 Agent → MCP session exposure → rules/runtime → Core，并以 lobby、play、combat 三阶段控制工具发现与调用。
+`sagasmith-core`、`SagaSmith-agent`、`SagaSmith-service`、内容目录、官网与组织文档
+继续独立。开发者页和各仓库 README 已切换到当前拓扑，Service 的组件锁也只保留
+实际参与当前构建的仓库。
 
-官网、组织 Profile 和全部仓库 README 同步标注真实边界与成熟度；D&D UI 重新定位为面向开团现场的 Alpha DM Workbench。
+
+### 2026-08-18 — 托管 Service 与当前内容目录进入公开开发
+
+`SagaSmith-service` 现在公开展示托管账户、配额、战役房间、主持身份、Agent
+调度、统一 Web 与多系统 MCP 编排。Service 不拥有 D&D 或 CoC 的权威游戏状态；
+每一次领域操作仍交给对应 MCP 重新做权限、revision、阶段和角色范围校验。
+
+托管房间现在可以把 Agent 输出拆成公开叙述、角色演绎、提示与权威
+`resolution_ref`。D&D 与 CoC MCP 返回按受众过滤的 resolution presentation，
+前端只渲染服务端已经允许的骰点、结果和待选择项。
+
+`SagaSmith-dnd-content-library` 同时改为公开仓库，机器索引记录当前 46 个不可变
+Pack 的身份、依赖、大小和校验和。公开可见不等于开放内容许可：每个 Pack、来源、
+角色图和其他资产继续保留自己的许可、署名与分发限制，使用者必须自行确认授权。
+
+Service 的公开仓库仍以其专有 `LICENSE` 为准；SagaSmith 的 Apache-2.0 运行时、
+Skills、UI 与网站也继续按各自仓库的许可证发布。
+
+
+### 2026-08-02 — 角色、结构化模组与扩展规则进入统一分享格式
+
+PC、NPC 和怪物现在使用同一个 `sagasmith.actor-card.v3`。导入会创建
+新的 Character identity，并且不会携带来源数据库 id、权限或 actor knowledge。
+2014 与 2024 的怪物/NPC 由默认 preset 内容包提供，而不是写死在 Host 或遭遇
+驱动器里。
+
+核心规则、Addon、模组和预设现在全部使用 `sagasmith.content-package` v2 的
+`.sagasmith-pack` 归档。结构化模组可以打包标准化原文、Scene Atlas、地图与其他
+内容寻址资产、审核内容、NPC、怪物、预设 PC、角色图及其稳定场景关联，再通过公开 MCP
+工具在另一安装中重新导入。
+内容包不是战役存档：进度、世界状态、记忆、随机流、分支与 Snapshot 继续留在
+各自的权威运行时账本中。
+
+经过审核的扩展规则包现在可以连同完整索引来源一起导出。本地 source/chunk id
+会转换为稳定引用，目标端校验 system、edition、依赖 version 与不受本地 UUID
+影响的 definition checksum 后用新 id 重建。规则内容的安装不会自动进行分支启用；
+Addon 与模组激活仍需独立的 Owner/DM 操作。旧 portable JSON、松散角色卡、release
+manifest 与 `.sagasmith-module` 已退出公开协议，不存在静默兼容路径。
+
+内容包的技术可迁移性不代表内容获得了再分发授权。完整规则书、模组原文与从其页面
+提取的角色图必须继续服从各自许可。2026-08-18 起当前目录仓库公开可见，但这只公开
+索引与仓库状态，不会把任何 Pack 自动变成开放内容；下载、导入和再分发仍需逐包核对
+`license_evidence`、署名、资产许可与来源授权。
+
+
+### 2026-07-15 — D&D Workbench 打通 Scene Atlas 与临时战斗地图
+
+D&D UI 现在区分三类数据：按模组顺序组织的 Scene Index、只表达来源证据的 Scene Spatial，以及战斗开始时创建的临时五尺格 Combat Map。背景占位素材不携带墙体、掩体或视线等机械含义。
+
+本地 principal-aware Gateway 通过 MCP 工具投影场景、进度与战斗状态，并用 SSE 通知 campaign revision 变化。拖动 Token 只提出移动请求，最终仍由 MCP 验证权限、分支、幂等、距离、阻挡与反应窗口。
 
 <!-- NEWS_END -->
 
