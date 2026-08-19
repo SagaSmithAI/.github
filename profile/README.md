@@ -95,10 +95,19 @@ flowchart TB
 4. **检索不是权威状态。** FTS/向量检索负责找候选；关系数据库、规则包锁定与分支祖先链负责决定有效事实。
 5. **商业内容不随代码分发。** 用户只能导入自己有权使用的规则书和模组；派生索引保留来源与版本信息。
 6. **内容包不是存档。** `sagasmith.content-package` 以 checksum、稳定来源引用和新运行时身份导入；权限、ActorKnowledge、进度、随机流和 Snapshot 不随内容包迁移，导入也不自动授予分支启用权限。
+7. **Host 身份必须可验证。** Service 使用共享密钥签发带时效的 `sagasmith.auth-context/v1`；Agent 负责传递会话身份，领域 MCP 仍在每次调用时重新校验角色、战役、actor、阶段与 revision。
 
 ## News
 
 <!-- NEWS_START -->
+
+### 2026-08-20 — 最新运行时完成并行参考战役回归
+
+长回归现在会从当前 Agent、Core、D&D、CoC、Narrative 与 Service 源码重建托管栈，
+再以隔离客户端并发运行 D&D 与 CoC 参考战役。两条路径均完成且没有记录到回归缺口，
+D&D 额外写入一个合法结局；每个 campaign 的日志、运行时 revision 与总结果都保存为
+机器可读证据。目录中未实际执行的模组和互斥路径继续明确列为 exclusion，不会被当作
+隐式通过。Service → Agent → MCP 的 principal context 同时切换为带时效签名协议。
 
 ### 2026-08-19 — 三条领域链路收敛为垂直 monorepo
 
@@ -134,6 +143,6 @@ release manifest 与 `.sagasmith-module` 不再属于公开协议。
 
 ## 项目状态
 
-SagaSmithAI 仍处于 **Alpha / active development**。D&D 与 CoC MCP 路径已覆盖规则、记忆、内容导入、会话 exposure、受众投影和权威 resolution presentation；Narrative MCP 提供系统无关长线叙事边界；公开的 Service 正在验证账户、多系统房间、托管主持与统一 Web。当前适合本地开发、集成验证与实团测试，不应被视作已经稳定运营的商业 VTT。
+SagaSmithAI 仍处于 **Alpha / active development**。D&D 与 CoC MCP 路径已覆盖规则、记忆、内容导入、会话 exposure、受众投影和权威 resolution presentation，并已用最新托管运行时完成并行参考战役回归；Narrative MCP 提供系统无关长线叙事边界；公开的 Service 正在验证账户、多系统房间、托管主持与统一 Web。当前适合本地开发、集成验证与实团测试，不应被视作已经稳定运营的商业 VTT。
 
 多数原创运行时、Skills、UI 与网站代码使用 Apache-2.0；`SagaSmith-service` 虽公开可见，仍以其仓库内专有 LICENSE 为准。D&D SRD 派生内容遵循对应的 Creative Commons 许可与仓库内 NOTICE；Content Pack 必须逐包核对许可、署名和分发授权。
