@@ -104,7 +104,8 @@ flowchart TB
 
 D&D、CoC 与 Narrative 现在各由一个领域仓库共同版本化 Domain、MCP、Skills、领域 UI
 （如有）和对应的创作生成流程。`sagasmith-core`、Agent、Service、内容目录与官网继续独立；
-原来的 MCP、Skills、UI 和通用 Module Generator 仓库进入归档迁移阶段。
+原来的 MCP、Skills、UI 和通用 Module Generator 仓库已归档为只读历史。这些领域
+组件的当前开发、发布、Issue 与文档入口仅为三个领域 monorepo。
 
 ### 2026-08-18 — 托管 Service 与当前 Content Pack 目录公开
 
