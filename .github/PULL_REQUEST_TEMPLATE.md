@@ -7,6 +7,7 @@ Describe the user-visible result and the repository that owns it.
 - [ ] Principal, campaign, branch, actor, visibility, and GM-only scopes are preserved.
 - [ ] Deterministic settlement and GM judgment remain explicitly separated.
 - [ ] UI/Skills/configuration/docs were updated when their contract changed.
+- [ ] Local and hosted paths preserve the same authoritative MCP schemas, errors, revision, and idempotency behavior.
 - [ ] No secrets, local state, commercial source text, or private campaign data are included.
 
 ## Validation
