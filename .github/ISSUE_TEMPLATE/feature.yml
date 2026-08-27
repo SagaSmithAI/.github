@@ -3,6 +3,13 @@ description: Propose a scoped platform capability
 title: "[Feature]: "
 labels: [enhancement]
 body:
+  - type: dropdown
+    id: surface
+    attributes:
+      label: Product surface
+      options: [Local Agent Kit, Existing MCP client integration, SagaSmith Web, Domain vertical, Shared Core, Content Library, Public website, Organization documentation]
+    validations:
+      required: true
   - type: textarea
     id: problem
     attributes:

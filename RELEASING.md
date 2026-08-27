@@ -22,6 +22,9 @@ SagaSmithAI repositories version and release independently. A platform milestone
 9. A SagaSmith Web compatibility set pins exact Agent, Core, and domain-monorepo revisions and proves a real Lobby -> Play -> Combat -> Play or system-equivalent path.
 10. The same contract suite passes against local stdio MCP, local Streamable HTTP MCP, and hosted
     network MCP without schema, capability, error, authority, revision, or idempotency drift.
+11. Hosted releases use the exact component revisions recorded by
+    `SagaSmith-Web/component-versions.json`; archived standalone repositories are never release
+    inputs or compatibility fallbacks.
 
 ## Tagging
 

@@ -5,9 +5,13 @@ on:
   workflow_dispatch:
 permissions:
   contents: write
+concurrency:
+  group: profile-news-sync
+  cancel-in-progress: false
 jobs:
   sync:
     runs-on: ubuntu-latest
+    timeout-minutes: 10
     steps:
       - uses: actions/checkout@v7
 
@@ -15,64 +19,21 @@ jobs:
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
+          set -euo pipefail
           mkdir -p /tmp/news
-          items=$(gh api "repos/SagaSmithAI/SagaSmithAI.github.io/contents/news?ref=main" --jq '.[].name' 2>/dev/null || true)
-          while IFS= read -r file; do
-            if [ -z "$file" ]; then continue; fi
-            content=$(gh api "repos/SagaSmithAI/SagaSmithAI.github.io/contents/news/$file?ref=main" --jq '.content' 2>/dev/null || true)
-            if [ -n "$content" ]; then
-              printf '%s' "$content" | base64 --decode > "/tmp/news/$file"
-            fi
-          done <<< "$items"
-          find /tmp/news -maxdepth 1 -type f -printf '%f\n' | sort || true
-
-      - name: Generate news markdown
-        run: |
-          NEWS_FILE=$(find /tmp/news -maxdepth 1 -type f -printf '%f\n' | sort -r | head -1)
-          if [ -z "$NEWS_FILE" ]; then
-            echo "No news files found"
-            exit 0
+          items=$(gh api "repos/SagaSmithAI/SagaSmithAI.github.io/contents/news?ref=main" --jq '.[] | select(.type == "file" and (.name | endswith(".md"))) | .name')
+          if [ -z "$items" ]; then
+            echo "No Markdown news files found" >&2
+            exit 1
           fi
-
-          : > /tmp/news_block.md
-          while IFS= read -r f; do
-            CONTENT=$(cat "/tmp/news/$f")
-            TITLE=$(printf '%s\n' "$CONTENT" | grep "^title:" | head -1 | sed 's/title: *//')
-            DATE=$(printf '%s\n' "$CONTENT" | grep "^date:" | head -1 | sed 's/date: *//')
-            BODY=$(printf '%s\n' "$CONTENT" | sed -n '/^---$/,/^---$/!p' | sed '/./,$!d')
-
-            printf '\n\n### %s — %s\n\n%s\n' "$DATE" "$TITLE" "$BODY" >> /tmp/news_block.md
-          done < <(find /tmp/news -maxdepth 1 -type f -printf '%f\n' | sort -r | head -5)
-
-          echo "News block generated"
+          while IFS= read -r file; do
+            content=$(gh api "repos/SagaSmithAI/SagaSmithAI.github.io/contents/news/$file?ref=main" --jq '.content')
+            printf '%s' "$content" | base64 --decode > "/tmp/news/$file"
+          done <<< "$items"
+          find /tmp/news -maxdepth 1 -type f -name '*.md' -printf '%f\n' | sort
 
       - name: Update README
-        run: |
-          README="profile/README.md"
-
-          # Check if markers exist
-          if grep -q "NEWS_START" "$README"; then
-            # Replace between markers
-            python3 - "$README" /tmp/news_block.md <<'PY'
-          import re
-          import sys
-          from pathlib import Path
-
-          readme = Path(sys.argv[1])
-          news = Path(sys.argv[2]).read_text(encoding="utf-8")
-          content = readme.read_text(encoding="utf-8")
-          content = re.sub(
-              r'<!-- NEWS_START -->.*?<!-- NEWS_END -->',
-              '<!-- NEWS_START -->\n' + news + '\n<!-- NEWS_END -->',
-              content,
-              flags=re.DOTALL,
-          )
-          readme.write_text(content, encoding="utf-8")
-          PY
-          else
-            echo "No NEWS markers found in README"
-            exit 0
-          fi
+        run: python3 scripts/render_profile_news.py profile/README.md /tmp/news --limit 3
 
       - name: Commit and push if changed
         run: |

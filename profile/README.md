@@ -1,206 +1,163 @@
 <p align="center">
-  <img src="sagasmith.png" alt="SagaSmithAI" width="176">
+  <a href="https://sagasmithai.github.io">
+    <img src="https://sagasmithai.github.io/logo-wordmark.png" alt="SagaSmithAI" width="260">
+  </a>
 </p>
 
-<h1 align="center">SagaSmithAI</h1>
+<h1 align="center">让世界记得每一次选择</h1>
 
 <p align="center">
-  <strong>AI 原生 TTRPG 平台</strong><br>
-  <em>An AI-native platform for tabletop role-playing games.</em>
-</p>
-
-<p align="center">
-  让 AI 不只会讲故事，也能理解规则、维护世界状态、区分角色所知，并陪一张桌子走完长期战役。<br>
-  AI that can adjudicate rules, preserve world state, respect who knows what, and stay with a campaign for the long haul.
+  <strong>AI 原生 TTRPG 平台 · An AI-native TTRPG platform</strong><br>
+  Agent 负责理解与主持，规则引擎负责确定性结算，领域 MCP 负责权威状态。<br>
+  Agents interpret and host; engines settle deterministic rules; domain MCPs own authoritative state.
 </p>
 
 <p align="center">
-  <a href="https://sagasmithai.github.io">Website</a> ·
-  <a href="https://github.com/SagaSmithAI/SagaSmith-agent">Start with the Agent</a> ·
-  <a href="https://github.com/SagaSmithAI/SagaSmith-service">SagaSmith Web</a> ·
-  <a href="https://github.com/SagaSmithAI/SagaSmith-dnd-content-library">Content Catalog</a> ·
-  <a href="https://github.com/SagaSmithAI/sagasmith-dnd">D&D Domain</a> ·
-  <a href="https://github.com/orgs/SagaSmithAI/repositories">All repositories</a>
+  <a href="https://sagasmithai.github.io/start"><strong>开始使用</strong></a> ·
+  <a href="https://sagasmithai.github.io">官网</a> ·
+  <a href="https://sagasmithai.github.io/developers">架构</a> ·
+  <a href="https://github.com/SagaSmithAI/SagaSmith-agent">Local Agent Kit</a> ·
+  <a href="https://github.com/SagaSmithAI/SagaSmith-Web">SagaSmith Web</a> ·
+  <a href="https://github.com/orgs/SagaSmithAI/repositories">全部仓库</a>
 </p>
 
----
+> **当前阶段：Active Alpha。** 适合本地开发、集成验证与实团测试；公开源码、参考战役通过或仓库可见，都不等于生产服务承诺或内容再分发授权。
+>
+> **Current stage: Active Alpha.** Ready for local development, integration validation, and real-table testing—not a production-service or content-licensing promise.
 
-## 为什么是 AI 原生
+## 选择你的入口
 
-传统 VTT 以地图和表单为中心，聊天机器人以一次对话为中心。SagaSmithAI 把 **Agent、规则、记忆与内容** 放在同一个运行闭环里：
+| 我想要…… | 当前入口 | 运行边界 |
+|---|---|---|
+| 自己运行 Discord、QQ、Telegram Bot 或本地 AI GM | [**SagaSmith Local Agent Kit**](https://github.com/SagaSmithAI/SagaSmith-agent#local-与-hosted-双发行物) | Agent + 所选 Domain MCP + SQLite / 本地文件；不依赖 Web、PostgreSQL、Redis 或对象存储 |
+| 让 Codex、Claude Code、OpenClaw 等现有 Agent 使用 SagaSmith | [**MCP 配置与无凭证模板**](https://github.com/SagaSmithAI/SagaSmith-agent/tree/main/examples/local-agent-kit) | 通过 stdio 或 localhost Streamable HTTP 直接连接所选领域 MCP |
+| 构建浏览器、多人房间、Forge 与 Module Studio | [**SagaSmith Web**](https://github.com/SagaSmithAI/SagaSmith-Web) | 浏览器前端 + API/BFF + 托管控制面 + principal-scoped Agent workers + 基础设施 |
+| 接入 D&D 5e、CoC 7e 或系统无关长线叙事 | [**领域仓库**](#当前仓库地图) | Domain、MCP、Skills、UI（如有）与创作流程在同一 commit 下版本化 |
 
-- **Agent 原生** — Skills 告诉 Agent 如何主持，MCP 提供可发现、可约束、可审计的真实能力；任意兼容 Agent 都能接入。
-- **规则可执行** — 确定性的检定、战斗、资源与状态变化交给引擎；需要语境判断的部分仍由 GM/Agent 明确裁决。
-- **战役可延续** — Snapshot DAG、分支、事件、修订式记忆与 continuity context 共同维护长期世界，而不是只保存聊天摘要。
-- **知识有边界** — PC、NPC、玩家与 GM 各自拥有访问范围和 actor knowledge，避免隐藏信息与兄弟时间线串线。
-- **内容可落地** — 规则书与模组从 PDF/Markdown 进入结构化导入、质量检查、检索、场景索引和规则包，而不是停留在向量片段。
-- **内容可迁移** — 核心规则、Addon、模组和预设共用一个可校验归档；PC、NPC、怪物共享角色卡，原文、Scene Atlas、资产、角色图、审核内容和稳定引用随包迁移。
-- **系统可扩展** — `sagasmith-core` 保持规则无关；D&D 5e 和 CoC 7e 通过系统插件扩展，规则包与内容包可独立演进。
+<details>
+<summary><strong>English entry guide</strong></summary>
+
+| Goal | Start here | Boundary |
+|---|---|---|
+| Run a local AI GM or channel bot | [SagaSmith Local Agent Kit](https://github.com/SagaSmithAI/SagaSmith-agent#local-与-hosted-双发行物) | Agent + selected Domain MCP + SQLite/local files; no Web infrastructure required |
+| Connect an existing MCP-capable Agent | [Credential-free templates](https://github.com/SagaSmithAI/SagaSmith-agent/tree/main/examples/local-agent-kit) | Direct stdio or localhost Streamable HTTP connection |
+| Build the hosted browser product | [SagaSmith Web](https://github.com/SagaSmithAI/SagaSmith-Web) | Frontend, API/BFF, hosted control plane, Agent workers, and infrastructure |
+| Extend a game system | [Current domain repositories](#当前仓库地图) | Domain, MCP, Skills, UI where present, and authoring flow versioned together |
+
+</details>
 
 ## 两种部署，同一权威契约
 
 ```mermaid
-flowchart TB
-    H[玩家 · GM · 创作者]
-    subgraph L[Local Agent Kit]
-      A[Bot · 通用 Agent · SagaSmith Agent]
-      LT[stdio 或 localhost Streamable HTTP]
-      LM[领域 MCP]
-      LR[对应领域 runtime]
-      LS[(SQLite · 本地文件)]
-      A --> LT --> LM --> LR --> LS
+flowchart LR
+    subgraph Local[Local Agent Kit]
+      LC[Bot · SagaSmith Agent · Generic Agent]
+      LT[stdio · localhost HTTP]
+      LD[(SQLite · local files)]
+      LC --> LT
     end
-    subgraph W[SagaSmith Web]
+
+    subgraph Hosted[SagaSmith Web]
       B[Browser · PWA]
-      API[FastAPI API/BFF]
-      CP[托管 control plane<br/>协作 · Forge · Module Studio · Operations]
-      AW[Principal-scoped Agent worker]
-      HM[领域 MCP]
-      HR[对应领域 runtime]
-      HS[(PostgreSQL · Redis · MinIO/S3)]
-      B --> API --> CP --> AW --> HM --> HR
-      CP --> HS
+      API[API/BFF · collaboration · Forge]
+      W[Principal-scoped Agent worker]
+      DB[(PostgreSQL · Redis · object storage)]
+      B --> API --> W
+      API --> DB
     end
-    H --> A
-    H --> B
-    LM -. 同一 authoritative MCP contract .-> HM
+
+    LT --> MCP[Authoritative Domain MCP contract]
+    W --> MCP
+    MCP --> R[D&D · CoC · Narrative runtime]
+    R --> C[Sagasmith Core]
+    C -. local persistence .-> LD
 ```
 
-本地与 Hosted 路径使用相同的 handlers、schemas、权限、revision、idempotency 与工具语义；差异只允许存在于 transport、authentication、storage 和 deployment。本地 Agent Kit 不依赖 SagaSmith Web、PostgreSQL、Redis、对象存储、托管账户、配额或 Forge。Discord、QQ、Telegram Bot 可由 SagaSmith Agent 承载；Codex、Claude Code、OpenClaw 与其他 MCP client 也可直接连接所选领域 MCP。SagaSmith Agent 是可替换的 Host 与 MCP consumer，领域 MCP 才是规则、战役状态和写入语义的权威边界。
+本地与 Hosted 只允许在 **transport、authentication、storage、deployment** 上不同。两条路径必须保持相同的 MCP handlers、tool schemas、错误、权限、revision、idempotency 与规则写入语义。
 
-## 从哪里开始
+Local and hosted deployments may differ in **transport, authentication, storage, and deployment** only. MCP handlers, tool schemas, errors, authority, revisions, idempotency, and rule-write semantics stay identical.
 
-| 你想做什么 | 从这里开始 | 说明 |
+### 不能跨越的边界
+
+- **Agent ≠ 领域数据库**：Agent 管理模型、身份、会话与渠道，不直接拥有规则或战役账本。
+- **Skills ≠ 引擎**：Skills 描述主持与创作流程；可结算状态变化必须经过 MCP / runtime。
+- **检索 ≠ 真相**：检索寻找候选证据；持久状态、分支祖先、规则锁与来源决定有效事实。
+- **客户端 ≠ 权威**：浏览器和 Bot 只接收服务端按 principal、actor、campaign 与 phase 过滤的投影。
+- **内容包 ≠ 存档**：Pack 不携带权限、ActorKnowledge、进度、随机流、分支或 Snapshot。
+
+## 本地安装入口
+
+默认安装需要 Python 3.11+、[uv](https://docs.astral.sh/uv/) 与 Node.js 22.12+（含 npm）；纯后端安装可显式添加 `--skip-ui`。
+
+```bash
+git clone https://github.com/SagaSmithAI/SagaSmith-agent.git
+cd SagaSmith-agent
+uv run nanobot sagasmith install --source release --profile dnd-only
+uv run nanobot onboard --wizard --config config/config.json --workspace workspace
+uv run nanobot sagasmith doctor --json
+uv run nanobot sagasmith start
+```
+
+`--source release` 会按 Agent 的发行锁克隆并固定所选组件；可将 `dnd-only` 换成 `coc-only`、`narrative-only` 或 `multi-system`。安装器不导入商业书籍、不自动激活 Pack，也不会替用户配置 provider secret。已有 sibling 源码工作区的开发者可按 Agent 文档改用 workspace source。完整步骤与 transport 选择见 [开始使用页面](https://sagasmithai.github.io/start)。
+
+## 当前仓库地图
+
+| 层 | 唯一当前入口 | 所有权 |
 |---|---|---|
-| 直接搭建可聊天的 AI GM | [SagaSmith-agent](https://github.com/SagaSmithAI/SagaSmith-agent) | 多渠道 Agent、身份、会话和 MCP 编排 |
-| 使用浏览器、多人房间、Forge 与 Module Studio | [SagaSmith Web](https://github.com/SagaSmithAI/SagaSmith-service) | 当前仓库名仍为 `SagaSmith-service`；包含前端、API/BFF、托管 control plane、协作与运维 |
-| 给现有 Agent 接入完整 D&D 能力 | [sagasmith-dnd](https://github.com/SagaSmithAI/sagasmith-dnd) | Domain、MCP、Skills、UI 与模组生成的完整垂直实现 |
-| 给现有 Agent 接入 CoC 7e 能力 | [sagasmith-coc](https://github.com/SagaSmithAI/sagasmith-coc) | Domain、MCP、Skills、UI 与模组生成的完整垂直实现 |
-| 构建新的 TTRPG 系统 | [sagasmith-core](https://github.com/SagaSmithAI/sagasmith-core) | 系统无关的数据、分支、知识、导入与检索服务 |
-| 使用或扩展 D&D 规则运行时 | [sagasmith-dnd](https://github.com/SagaSmithAI/sagasmith-dnd) | D&D 5e 2014/2024 规则、内容和战斗引擎 |
-| 使用 CoC 7e 运行时 | [sagasmith-coc](https://github.com/SagaSmithAI/sagasmith-coc) | d100、SAN、战斗、追逐与模组解析 |
-| 构建系统无关长线叙事 | [sagasmith-narrative](https://github.com/SagaSmithAI/sagasmith-narrative) | Domain、stdio MCP、Skills、连续性与项目生成 |
-| 给 Agent 安装主持流程 | [D&D Skills](https://github.com/SagaSmithAI/sagasmith-dnd/tree/main/skills) / [CoC Skills](https://github.com/SagaSmithAI/sagasmith-coc/tree/main/skills) / [Narrative Skills](https://github.com/SagaSmithAI/sagasmith-narrative/tree/main/skills) | 随领域代码共同版本化的 SKILL.md 工作流与参考资料 |
-| 生成可导入的冒险模组 | [D&D generator](https://github.com/SagaSmithAI/sagasmith-dnd/tree/main/skills/dnd-module-generator) / [CoC generator](https://github.com/SagaSmithAI/sagasmith-coc/tree/main/skills/coc-module-generator) | 分系统的来源解释和分阶段生成流程 |
-| 浏览当前内容包目录 | [Content Pack Library](https://github.com/SagaSmithAI/SagaSmith-dnd-content-library) | 公开仓库与校验和索引；每个 Pack 仍保留独立许可和分发限制 |
+| Agent host | [SagaSmith-agent](https://github.com/SagaSmithAI/SagaSmith-agent) | 模型、身份、会话、Channels、MCP consumer、Local Kit 与 Hosted worker 基础 |
+| Hosted product | [SagaSmith-Web](https://github.com/SagaSmithAI/SagaSmith-Web) | SagaSmith Web 前端、API/BFF、协作、Forge、Module Studio、Agent 编排与 operations |
+| Neutral core | [Sagasmith-core](https://github.com/SagaSmithAI/Sagasmith-core) | 系统无关持久化、导入、检索、分支、知识与共享 runtime primitives |
+| D&D vertical | [Sagasmith-dnd](https://github.com/SagaSmithAI/Sagasmith-dnd) | D&D Domain、权威 MCP、Skills、Workbench 与模组生成 |
+| CoC vertical | [Sagasmith-coc](https://github.com/SagaSmithAI/Sagasmith-coc) | CoC 7e Domain、权威 MCP、Skills、Workbench 与模组生成 |
+| Narrative vertical | [sagasmith-narrative](https://github.com/SagaSmithAI/sagasmith-narrative) | 系统无关 Narrative Domain、权威 MCP、Skills 与项目生成 |
+| Content catalog | [SagaSmith-dnd-content-library](https://github.com/SagaSmithAI/SagaSmith-dnd-content-library) | 权利感知的 Pack、来源/资产 blob 与 checksum 索引 |
+| Public site | [SagaSmithAI.github.io](https://github.com/SagaSmithAI/SagaSmithAI.github.io) | 官网、上手入口、架构与公开进展 |
 
-## 仓库地图
+原独立 MCP、Skills、UI 与通用 Module Generator 仓库是 **archived read-only history**：不接收新 Issue，不参与发布，也不是 compatibility fallback。
 
-| 层 | 仓库 | 职责 | 当前定位 |
+## 当前可验证范围
+
+| 路径 | 当前状态 | 已有证据 | 不应扩张成的说法 |
 |---|---|---|---|
-| Agent | [SagaSmith-agent](https://github.com/SagaSmithAI/SagaSmith-agent) | 多渠道、模型、会话、身份、MCP client | Alpha，主要入口 |
-| Web product | [SagaSmith Web](https://github.com/SagaSmithAI/SagaSmith-service) | 浏览器前端、API/BFF、托管 control plane、协作、Forge、Module Studio、Agent 调度与运维 | Repo 暂名 `SagaSmith-service`；Public source，专有许可 |
-| Core | [sagasmith-core](https://github.com/SagaSmithAI/sagasmith-core) | 系统无关持久化、导入、检索、分支与知识 | Python library |
-| Domain | [sagasmith-dnd](https://github.com/SagaSmithAI/sagasmith-dnd) | D&D 规则、MCP、Skills、UI 与模组生成 | 可实测垂直链路 |
-| Domain | [sagasmith-coc](https://github.com/SagaSmithAI/sagasmith-coc) | CoC 规则、MCP、Skills、UI 与模组生成 | 可实测垂直链路 |
-| Domain | [sagasmith-narrative](https://github.com/SagaSmithAI/sagasmith-narrative) | 系统无关叙事 Domain、stdio MCP、Skills 与项目生成 | 可实测夹具与真实 Host 回归 |
-| Web | [SagaSmithAI.github.io](https://github.com/SagaSmithAI/SagaSmithAI.github.io) | 官网、架构和生态入口 | Static site |
-| Content | [SagaSmith-dnd-content-library](https://github.com/SagaSmithAI/SagaSmith-dnd-content-library) | D&D/CoC 当前统一内容包、来源/资产 blobs 与机器索引 | Public repository；内容权利逐包判断 |
+| D&D 5e | Early Alpha | 规则、内容、场景、知识边界、战斗与参考战役路径 | 不代表所有 Pack 或剧情分支完整通关 |
+| CoC 7e | In testing | 调查、检定、SAN、追逐、知识边界与参考战役路径 | 不代表完整 Hosted 产品已稳定运营 |
+| Narrative | Alpha | 系统无关连续性、stdio MCP、Skills 与项目生成 | 不代表任意系统规则可自动执行 |
+| Extended ruleset import | Experimental | 来源保留、解析、质量报告、索引与 Pack 校验 | 不代表可以自动理解任意商业规则书 |
 
-原独立 MCP、Skills、UI 与通用 Module Generator 仓库仅保留为只读历史：不接收新
-Issue，不参与发布或兼容回退；其入口 README 应只指向对应的当前 vertical 仓库。
-
-## 设计边界
-
-1. **Agent 不拥有领域数据库。** Agent 负责会话、身份和调度；领域 MCP 拥有规则、模组、战役数据与写入过程。
-2. **Skills 不伪装成引擎。** Skills 描述策略与流程；可结算的状态变化必须经过 MCP/规则运行时。
-3. **引擎与 Agent 各自裁决。** 输入已经确定且规则机械化时由引擎结算；来源无冲突的目标、意图、无坐标空间关系、例外和叙事代价由 Agent 判断。只有玩家选择、Owner 审批、权限变化或缺失/冲突来源需要外部输入。
-4. **检索不是权威状态。** FTS/向量检索负责找候选；关系数据库、规则包锁定与分支祖先链负责决定有效事实。
-5. **商业内容不随代码分发。** 用户只能导入自己有权使用的规则书和模组；派生索引保留来源与版本信息。
-6. **内容包不是存档。** `sagasmith.content-package` 以 checksum、稳定来源引用和新运行时身份导入；权限、ActorKnowledge、进度、随机流和 Snapshot 不随内容包迁移，导入也不自动授予分支启用权限。
-7. **Host 身份必须可验证。** SagaSmith Web 使用共享密钥签发带时效的 `sagasmith.auth-context/v1`；Agent 负责传递会话身份，领域 MCP 仍在每次调用时重新校验角色、战役、actor、阶段与 revision。
-
-## News
+## Latest progress
 
 <!-- NEWS_START -->
 
-
 ### 2026-08-20 — 最新运行时完成 D&D 与 CoC 并行参考战役回归
 
-长回归会先从当前 `SagaSmith-agent`、`sagasmith-core`、三个领域仓库与
-`SagaSmith-service` 源码重建并重建容器，再开始任何房间动作。SagaSmith Web 使用临时共享
-密钥签发带时效的 `sagasmith.auth-context/v1`，Agent 将 principal context 传给
-会话作用域 MCP；领域服务仍在实际调用边界重新校验身份、角色、战役与 revision。
+长回归现会从当前 Agent 与领域依赖重建托管栈，以签名身份并发运行 D&D 和 CoC 参考战役，并保存逐战役机器可读证据。
 
-2026-08-20 的参考运行以隔离客户端并发完成 D&D 与 CoC 战役，没有记录到回归缺口；
-D&D 路径额外记录了一个合法结局。`runtime-refresh.json`、`summary.json` 与逐战役日志
-保存了构建 revision、调用结果和缺口列表。
-
-runner 会发现目录中的全部当前模组，并把没有执行的项目与互斥路径写成机器可读
-exclusion。这条结果证明当前参考集成边界可以工作，不代表全部 46 个 Pack 或每条剧情
-分支都已经完整通关。
-
+**Current runtime completes parallel D&D and CoC reference regressions** — The long regression now rebuilds the hosted stack from the current Agent and domain dependencies, runs D&D and CoC reference campaigns concurrently with signed identity, and preserves machine-readable evidence per campaign.
 
 ### 2026-08-19 — D&D、CoC 与 Narrative 完成垂直仓库收敛
 
-`sagasmith-dnd`、`sagasmith-coc` 与 `sagasmith-narrative` 现在分别作为一条
-完整领域链路的唯一源码入口。每个仓库共同版本化确定性 Domain、权威 MCP、Agent
-Skills、领域 UI（如有）和对应的 Pack/项目创作流程，同时继续保持各组件的运行时
-职责与权限边界。
+三条领域链路现在分别在一个仓库内共同版本化 Domain、MCP、Skills、UI（如有）与创作流程；旧拆分仓库已归档为只读历史。
 
-原独立 MCP、Skills、UI 和通用 Module Generator 仓库已经归档。它们仍可用于历史
-审计，但不再接收当前 Issue、发布或集成，也不会被 Agent、SagaSmith Web 或安装器作为
-兼容回退。
-
-`sagasmith-core`、`SagaSmith-agent`、`SagaSmith-service`、内容目录、官网与组织文档
-继续独立。开发者页、活跃仓库 README 与 SagaSmith Web 组件锁只把当前 vertical
-仓库作为发布和集成输入；归档仓库的入口文档应仅重定向到对应 vertical 仓库。
-
+**D&D, CoC, and Narrative complete vertical repository convergence** — Each domain path now versions Domain, MCP, Skills, UI where present, and authoring workflows in one repository; the former split repositories are archived read-only history.
 
 ### 2026-08-18 — SagaSmith Web 与当前内容目录进入公开开发
 
-`SagaSmith-service` 仓库中的 SagaSmith Web 现在公开展示托管账户、配额、战役房间、主持身份、Agent
-调度、浏览器前端与多系统 MCP 编排。SagaSmith Web 不拥有 D&D 或 CoC 的权威游戏状态；
-每一次领域操作仍交给对应 MCP 重新做权限、revision、阶段和角色范围校验。
+SagaSmith Web、D&D/CoC 多系统房间与当前 46 个 Content Pack 的校验和目录现已公开可见，同时继续保留明确的状态与内容权利边界。
 
-托管房间现在可以把 Agent 输出拆成公开叙述、角色演绎、提示与权威
-`resolution_ref`。D&D 与 CoC MCP 返回按受众过滤的 resolution presentation，
-前端只渲染服务端已经允许的骰点、结果和待选择项。
-
-`SagaSmith-dnd-content-library` 同时改为公开仓库，机器索引记录当前 46 个不可变
-Pack 的身份、依赖、大小和校验和。公开可见不等于开放内容许可：每个 Pack、来源、
-角色图和其他资产继续保留自己的许可、署名与分发限制，使用者必须自行确认授权。
-
-SagaSmith Web 的公开仓库仍以其专有 `LICENSE` 为准；SagaSmith 的 Apache-2.0 运行时、
-Skills、UI 与网站也继续按各自仓库的许可证发布。
-
-
-### 2026-08-02 — 角色、结构化模组与扩展规则进入统一分享格式
-
-PC、NPC 和怪物现在使用同一个 `sagasmith.actor-card.v3`。导入会创建
-新的 Character identity，并且不会携带来源数据库 id、权限或 actor knowledge。
-2014 与 2024 的怪物/NPC 由默认 preset 内容包提供，而不是写死在 Host 或遭遇
-驱动器里。
-
-核心规则、Addon、模组和预设现在全部使用 `sagasmith.content-package` v2 的
-`.sagasmith-pack` 归档。结构化模组可以打包标准化原文、Scene Atlas、地图与其他
-内容寻址资产、审核内容、NPC、怪物、预设 PC、角色图及其稳定场景关联，再通过公开 MCP
-工具在另一安装中重新导入。
-内容包不是战役存档：进度、世界状态、记忆、随机流、分支与 Snapshot 继续留在
-各自的权威运行时账本中。
-
-经过审核的扩展规则包现在可以连同完整索引来源一起导出。本地 source/chunk id
-会转换为稳定引用，目标端校验 system、edition、依赖 version 与不受本地 UUID
-影响的 definition checksum 后用新 id 重建。规则内容的安装不会自动进行分支启用；
-Addon 与模组激活仍需独立的 Owner/DM 操作。旧 portable JSON、松散角色卡、release
-manifest 与 `.sagasmith-module` 已退出公开协议，不存在静默兼容路径。
-
-内容包的技术可迁移性不代表内容获得了再分发授权。完整规则书、模组原文与从其页面
-提取的角色图必须继续服从各自许可。2026-08-18 起当前目录仓库公开可见，但这只公开
-索引与仓库状态，不会把任何 Pack 自动变成开放内容；下载、导入和再分发仍需逐包核对
-`license_evidence`、署名、资产许可与来源授权。
-
-
-### 2026-07-15 — D&D Workbench 打通 Scene Atlas 与临时战斗地图
-
-D&D UI 现在区分三类数据：按模组顺序组织的 Scene Index、只表达来源证据的 Scene Spatial，以及战斗开始时创建的临时五尺格 Combat Map。背景占位素材不携带墙体、掩体或视线等机械含义。
-
-本地 principal-aware Gateway 通过 MCP 工具投影场景、进度与战斗状态，并用 SSE 通知 campaign revision 变化。拖动 Token 只提出移动请求，最终仍由 MCP 验证权限、分支、幂等、距离、阻挡与反应窗口。
+**SagaSmith Web and the current content catalog enter public development** — SagaSmith Web, hosted D&D/CoC rooms, and the checksum catalog for 46 current Content Packs are now publicly visible with explicit state and content-rights boundaries.
 
 <!-- NEWS_END -->
 
-## 项目状态
+## 参与、支持与安全
 
-SagaSmithAI 仍处于 **Alpha / active development**。D&D 与 CoC MCP 路径已覆盖规则、记忆、内容导入、会话 exposure、受众投影和权威 resolution presentation，并已用最新托管运行时完成并行参考战役回归；Narrative MCP 提供系统无关长线叙事边界；公开的 SagaSmith Web 正在验证账户、多系统房间、托管主持与完整浏览器产品。当前适合本地开发、集成验证与实团测试，不应被视作已经稳定运营的商业 VTT。
+- 先从拥有行为的仓库开始；跨仓库或公共契约变更请先开 Issue。
+- 报告问题时附带仓库、commit/release、操作系统、Python/Node 版本、命令与脱敏错误。
+- 漏洞、私有战役数据、凭证或受限制来源内容不要放进公开 Issue；按相关仓库的 `SECURITY.md` 使用可用的私密渠道。
+- 多数 SagaSmith 原创 runtime、Skills、UI 与网站代码使用 Apache-2.0；`SagaSmith-Web` 以其仓库内许可证为准；每个 Content Pack 仍需单独核对许可与来源授权。
 
-多数原创运行时、Skills、UI 与网站代码使用 Apache-2.0；`SagaSmith-service` 虽公开可见，仍以其仓库内专有 LICENSE 为准。D&D SRD 派生内容遵循对应的 Creative Commons 许可与仓库内 NOTICE；Content Pack 必须逐包核对许可、署名和分发授权。
+<p align="center">
+  <strong>Build worlds that remember.</strong><br>
+  <a href="https://sagasmithai.github.io/start">Get started</a> ·
+  <a href="https://github.com/SagaSmithAI/.github/blob/main/CONTRIBUTING.md">Contributing</a> ·
+  <a href="https://github.com/SagaSmithAI/.github/blob/main/SECURITY.md">Security</a>
+</p>
