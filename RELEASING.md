@@ -19,7 +19,9 @@ SagaSmithAI repositories version and release independently. A platform milestone
 6. A changelog entry states breaking changes, upgrade steps, known limitations, and the compatibility set.
 7. The release contains no secrets, local state, imported commercial books, or campaign data.
 8. A Content Library publication records each Pack checksum and rights metadata; repository visibility alone is never treated as redistribution approval.
-9. A hosted Service compatibility set pins exact Agent, Core, and domain-monorepo revisions and proves a real Lobby -> Play -> Combat -> Play or system-equivalent path.
+9. A SagaSmith Web compatibility set pins exact Agent, Core, and domain-monorepo revisions and proves a real Lobby -> Play -> Combat -> Play or system-equivalent path.
+10. The same contract suite passes against local stdio MCP, local Streamable HTTP MCP, and hosted
+    network MCP without schema, capability, error, authority, revision, or idempotency drift.
 
 ## Tagging
 

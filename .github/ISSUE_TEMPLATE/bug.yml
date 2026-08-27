@@ -7,14 +7,14 @@ body:
     id: layer
     attributes:
       label: Affected layer
-      options: [Agent, MCP, Core, Rules runtime, Skills, UI, Website]
+      options: [Agent, MCP, Core, Rules runtime, Skills, UI, SagaSmith Web, Public website]
     validations:
       required: true
   - type: input
     id: version
     attributes:
       label: Repository and commit or release
-      placeholder: SagaSmith-dnd-mcp @ abc1234
+      placeholder: sagasmith-dnd @ abc1234
     validations:
       required: true
   - type: textarea
