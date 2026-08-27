@@ -7,7 +7,7 @@ body:
     id: layer
     attributes:
       label: Affected layer
-      options: [Agent, MCP, Core, Rules runtime, Skills, UI, SagaSmith Web, Public website]
+      options: [Local Agent Kit, Agent host, Domain MCP, Core, Rules runtime, Skills, Workbench UI, SagaSmith Web, Content Library, Public website, Organization documentation]
     validations:
       required: true
   - type: input
@@ -15,6 +15,13 @@ body:
     attributes:
       label: Repository and commit or release
       placeholder: sagasmith-dnd @ abc1234
+    validations:
+      required: true
+  - type: dropdown
+    id: deployment
+    attributes:
+      label: Deployment and transport
+      options: [Local stdio, Local Streamable HTTP, Hosted Web, Not transport-specific]
     validations:
       required: true
   - type: textarea

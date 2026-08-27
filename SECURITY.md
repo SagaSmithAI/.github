@@ -2,7 +2,7 @@
 
 ## Reporting a vulnerability
 
-Do not open a public issue for vulnerabilities that could expose credentials, private campaign data, GM-only content, arbitrary files, or remote execution. Use GitHub's private vulnerability reporting for the affected repository. If private reporting is unavailable, contact the organization owner through the address published on the SagaSmithAI GitHub profile and include only the minimum reproduction details needed to establish contact.
+Do not open a public issue for vulnerabilities that could expose credentials, private campaign data, GM-only content, arbitrary files, or remote execution. Until an affected repository's Security page explicitly offers private vulnerability reporting, contact the organization through the email address published on the SagaSmithAI GitHub profile and include only the minimum details needed to establish a private channel. When GitHub private vulnerability reporting is visibly enabled for that repository, prefer it.
 
 ## Supported code
 
@@ -11,7 +11,7 @@ The current default branch of each active repository receives security fixes. Ta
 ## Security boundaries
 
 - MCP stdio servers are intended for trusted local execution. Remote HTTP/SSE adapters require explicit authentication, origin policy, and network allowlists.
-- SagaSmith Web (currently in `SagaSmith-service`) is an Internet-facing browser product and orchestration layer. Account, room, identity, object-storage, internal-service, quota, and Agent credentials must remain server-side, and every domain action must be re-authorized by the target MCP.
+- SagaSmith Web in `SagaSmith-Web` is an Internet-facing browser product and orchestration layer. Account, room, identity, object-storage, internal-service, quota, and Agent credentials must remain server-side, and every domain action must be re-authorized by the target MCP.
 - Agent-supplied principal identifiers are not trusted. Hosts must inject a principal derived from the authenticated channel, and MCP servers must enforce campaign and actor grants.
 - Player-visible responses must not contain GM-only rules, scenes, hidden combatants, private actor knowledge, or another branch's state.
 - Imported PDFs, rulebooks, modules, templates, and skill assets are untrusted input. Enforce allowlisted roots, size/type limits, content-addressed storage, and provenance.

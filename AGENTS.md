@@ -12,8 +12,7 @@ must not invent runtime behavior or duplicate component-level contracts.
 - `sagasmith-dnd`, `sagasmith-coc`, and `sagasmith-narrative` are vertical
   repositories that own their Domain package, MCP, Skills, and UI where present.
 - `SagaSmith-agent` is the generic Agent host and MCP consumer.
-- **SagaSmith Web** is the hosted browser product in the repository currently named
-  `SagaSmith-service`; its control plane is one backend responsibility alongside the frontend,
+- **SagaSmith Web** is the hosted browser product in `SagaSmith-Web`; its control plane is one backend responsibility alongside the frontend,
   API/BFF, collaboration, Forge, Module Studio, Agent orchestration, and operations.
 - `SagaSmith-dnd-content-library` is a rights-aware Pack catalog.
 - `SagaSmithAI.github.io` is the public website.
@@ -25,6 +24,8 @@ compatibility paths. Historical news may keep accurate historical names.
 ## Documentation rules
 
 - Keep Chinese and English claims aligned where both are present.
+- Keep the organization Profile concise, Chinese-first, and English-accessible. Put full news,
+  executable setup, and long architecture explanations on the public website.
 - Link current component docs into the relevant vertical monorepo path.
 - Distinguish repository visibility, software license, and per-Pack/content
   rights.

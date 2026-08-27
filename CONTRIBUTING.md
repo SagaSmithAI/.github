@@ -1,9 +1,9 @@
 # Contributing to SagaSmithAI
 
-SagaSmithAI is a multi-repository AI-native TTRPG platform with both Apache-2.0 repositories and the publicly visible, proprietary `SagaSmith-service`. Start by choosing the layer that owns the behavior:
+SagaSmithAI is a multi-repository AI-native TTRPG platform with both Apache-2.0 repositories and the publicly visible `SagaSmith-Web`, which uses its own repository license. Start by choosing the layer that owns the behavior:
 
 - Agent identity, sessions, channels, and MCP client behavior belong in `SagaSmith-agent`.
-- Hosted accounts, quotas, campaign rooms, Agent dispatch, browser UI, Forge, Module Studio, and multi-system orchestration belong to **SagaSmith Web** in the repository currently named `SagaSmith-service`; it must call domain MCPs instead of becoming a second game-state owner.
+- Hosted accounts, quotas, campaign rooms, Agent dispatch, browser UI, Forge, Module Studio, and multi-system orchestration belong to **SagaSmith Web** in `SagaSmith-Web`; it must call domain MCPs instead of becoming a second game-state owner.
 - System-neutral persistence, branches, memory, actor knowledge, imports, and retrieval belong in `sagasmith-core`.
 - Rules and pure settlement logic belong in the relevant domain monorepo's `packages/domain`.
 - Agent-facing domain operations and storage ownership belong in that monorepo's `packages/mcp`.
