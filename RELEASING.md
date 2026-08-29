@@ -25,6 +25,13 @@ SagaSmithAI repositories version and release independently. A platform milestone
 11. Hosted releases use the exact component revisions recorded by
     `SagaSmith-Web/component-versions.json`; archived standalone repositories are never release
     inputs or compatibility fallbacks.
+12. MCP `2026-07-28` evidence covers sessionless `server/discover`, per-request version,
+    capability and authorization metadata, deterministic authorization-scoped catalogs with
+    `ttlMs`/`cacheScope`, explicit handle expiry, and header/body routing agreement. Any retained
+    handshake-era path is tested separately and documented as compatibility-only.
+13. Agent evaluations record both the authorized catalog candidate count and the smaller
+    model-visible selection. The host selects concrete tool IDs by system, phase, role, and task,
+    fails closed on unknown or empty selections, and never treats model visibility as permission.
 
 ## Tagging
 

@@ -77,6 +77,14 @@ flowchart LR
 
 Local and hosted deployments may differ in **transport, authentication, storage, and deployment** only. MCP handlers, tool schemas, errors, authority, revisions, idempotency, and rule-write semantics stay identical.
 
+### MCP `2026-07-28`：稳定目录，按需投影
+
+现代链路不再依赖 `initialize`、`Mcp-Session-Id` 或连接内隐藏状态。每个请求携带协议版本、客户端能力与面向目标 MCP 的短期委托；跨调用状态使用服务器签发、绑定 owner 与 TTL 的显式 handle，且每次使用都会重新授权。handle 只是状态名称，不是权限凭证。
+
+同一授权范围内的 `tools/list` 保持确定排序并通过 `ttlMs` / `cacheScope` 安全缓存。Agent Host 再按 **system × phase × role × task** 只向当前模型回合投影少量 facade 与相关工具，避免把完整目录塞入上下文；领域 MCP 仍对每次调用独立校验角色、阶段、revision 与具体 tool ID。迁移期保留的 handshake-era 路径仅用于明确兼容，并通过独立的 stdio / HTTP / Hosted contract matrix 验证。
+
+**MCP `2026-07-28`: stable catalogs, task-scoped projection.** The modern path does not depend on `initialize`, `Mcp-Session-Id`, or hidden connection state. Every request carries its protocol version, client capabilities, and a short-lived delegation for the target MCP. Cross-call state uses explicit server-issued handles bound to an owner and TTL; a handle names state and never grants authority by itself. Within one authorization scope, `tools/list` is deterministically ordered and safely cacheable through `ttlMs` / `cacheScope`. The Agent host then projects only a small **system × phase × role × task** facade subset into each model turn, while the domain MCP independently validates role, phase, revision, and the concrete tool ID on every call. Retained handshake-era behavior is compatibility-only and has a separate stdio / HTTP / Hosted contract matrix.
+
 ### 不能跨越的边界
 
 - **Agent ≠ 领域数据库**：Agent 管理模型、身份、会话与渠道，不直接拥有规则或战役账本。
