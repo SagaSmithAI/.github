@@ -29,7 +29,7 @@
 
 | 我想要…… | 当前入口 | 运行边界 |
 |---|---|---|
-| 自己运行 Discord、QQ、Telegram Bot 或本地 AI GM | [**SagaSmith Local Agent Kit**](https://github.com/SagaSmithAI/SagaSmith-agent#local-与-hosted-双发行物) | Agent + 所选 Domain MCP + SQLite / 本地文件；不依赖 Web、PostgreSQL、Redis 或对象存储 |
+| 自己运行 Discord、QQ、Telegram Bot 或本地 AI GM | [**SagaSmith Local Agent Kit**](https://github.com/SagaSmithAI/SagaSmith-agent) | Agent + 所选 Domain MCP + SQLite / 本地文件；不依赖 Web、PostgreSQL、Redis 或对象存储 |
 | 让 Codex、Claude Code、OpenClaw 等现有 Agent 使用 SagaSmith | [**MCP 配置与无凭证模板**](https://github.com/SagaSmithAI/SagaSmith-agent/tree/main/examples/local-agent-kit) | 通过 stdio 或 localhost Streamable HTTP 直接连接所选领域 MCP |
 | 构建浏览器、多人房间、Forge 与 Module Studio | [**SagaSmith Web**](https://github.com/SagaSmithAI/SagaSmith-Web) | 浏览器前端 + API/BFF + 托管控制面 + principal-scoped Agent workers + 基础设施 |
 | 接入 D&D 5e、CoC 7e 或系统无关长线叙事 | [**领域仓库**](#当前仓库地图) | Domain、MCP、Skills、UI（如有）与创作流程在同一 commit 下版本化 |
@@ -39,7 +39,7 @@
 
 | Goal | Start here | Boundary |
 |---|---|---|
-| Run a local AI GM or channel bot | [SagaSmith Local Agent Kit](https://github.com/SagaSmithAI/SagaSmith-agent#local-与-hosted-双发行物) | Agent + selected Domain MCP + SQLite/local files; no Web infrastructure required |
+| Run a local AI GM or channel bot | [SagaSmith Local Agent Kit](https://github.com/SagaSmithAI/SagaSmith-agent) | Agent + selected Domain MCP + SQLite/local files; no Web infrastructure required |
 | Connect an existing MCP-capable Agent | [Credential-free templates](https://github.com/SagaSmithAI/SagaSmith-agent/tree/main/examples/local-agent-kit) | Direct stdio or localhost Streamable HTTP connection |
 | Build the hosted browser product | [SagaSmith Web](https://github.com/SagaSmithAI/SagaSmith-Web) | Frontend, API/BFF, hosted control plane, Agent workers, and infrastructure |
 | Extend a game system | [Current domain repositories](#当前仓库地图) | Domain, MCP, Skills, UI where present, and authoring flow versioned together |
@@ -81,9 +81,9 @@ Local and hosted deployments may differ in **transport, authentication, storage,
 
 现代链路不再依赖 `initialize`、`Mcp-Session-Id` 或连接内隐藏状态。每个请求携带协议版本、客户端能力与面向目标 MCP 的短期委托；跨调用状态使用服务器签发、绑定 owner 与 TTL 的显式 handle，且每次使用都会重新授权。handle 只是状态名称，不是权限凭证。
 
-同一授权范围内的 `tools/list` 保持确定排序并通过 `ttlMs` / `cacheScope` 安全缓存。Agent Host 再按 **system × phase × role × task** 只向当前模型回合投影少量 facade 与相关工具，避免把完整目录塞入上下文；领域 MCP 仍对每次调用独立校验角色、阶段、revision 与具体 tool ID。迁移期保留的 handshake-era 路径仅用于明确兼容，并通过独立的 stdio / HTTP / Hosted contract matrix 验证。
+同一授权范围内的 `tools/list` 保持确定排序并通过 `ttlMs` / `cacheScope` 安全缓存。Agent Host 再按 **system × phase × role × task** 只向当前模型回合投影少量 facade 与相关工具，默认硬上限为 16 项，避免把完整目录塞入上下文；16 是 SagaSmith 的模型命中率策略，不是 MCP 协议限制。领域 MCP 仍对每次调用独立校验角色、阶段、revision 与具体 tool ID。迁移期保留的 handshake-era 路径仅用于明确兼容，并通过独立的 stdio / HTTP / Hosted contract matrix 验证。
 
-**MCP `2026-07-28`: stable catalogs, task-scoped projection.** The modern path does not depend on `initialize`, `Mcp-Session-Id`, or hidden connection state. Every request carries its protocol version, client capabilities, and a short-lived delegation for the target MCP. Cross-call state uses explicit server-issued handles bound to an owner and TTL; a handle names state and never grants authority by itself. Within one authorization scope, `tools/list` is deterministically ordered and safely cacheable through `ttlMs` / `cacheScope`. The Agent host then projects only a small **system × phase × role × task** facade subset into each model turn, while the domain MCP independently validates role, phase, revision, and the concrete tool ID on every call. Retained handshake-era behavior is compatibility-only and has a separate stdio / HTTP / Hosted contract matrix.
+**MCP `2026-07-28`: stable catalogs, task-scoped projection.** The modern path does not depend on `initialize`, `Mcp-Session-Id`, or hidden connection state. Every request carries its protocol version, client capabilities, and a short-lived delegation for the target MCP. Cross-call state uses explicit server-issued handles bound to an owner and TTL; a handle names state and never grants authority by itself. Within one authorization scope, `tools/list` is deterministically ordered and safely cacheable through `ttlMs` / `cacheScope`. The Agent host then projects only a small **system × phase × role × task** facade subset into each model turn, with a default hard cap of 16. That cap is a SagaSmith model-accuracy policy, not an MCP protocol limit. The domain MCP independently validates role, phase, revision, and the concrete tool ID on every call. Retained handshake-era behavior is compatibility-only and has a separate stdio / HTTP / Hosted contract matrix.
 
 ### 不能跨越的边界
 
@@ -92,6 +92,8 @@ Local and hosted deployments may differ in **transport, authentication, storage,
 - **检索 ≠ 真相**：检索寻找候选证据；持久状态、分支祖先、规则锁与来源决定有效事实。
 - **客户端 ≠ 权威**：浏览器和 Bot 只接收服务端按 principal、actor、campaign 与 phase 过滤的投影。
 - **内容包 ≠ 存档**：Pack 不携带权限、ActorKnowledge、进度、随机流、分支或 Snapshot。
+- **Web job ≠ MCP Task**：`RoomTurnJob` 负责队列、lease、heartbeat、重试、取消与恢复；MCP Task 只用于单个经过能力协商的真正长耗时工具。
+- **Web cache ≠ 领域数据库**：Web 只消费 MCP 成功提交后的 revisioned receipt/outbox projection；failed、rolled-back 与 no-op 写入不触发伪失效。
 
 ## 本地安装入口
 
@@ -127,14 +129,20 @@ uv run nanobot sagasmith start
 
 | 路径 | 当前状态 | 已有证据 | 不应扩张成的说法 |
 |---|---|---|---|
-| D&D 5e | Early Alpha | 规则、内容、场景、知识边界、战斗与参考战役路径 | 不代表所有 Pack 或剧情分支完整通关 |
-| CoC 7e | In testing | 调查、检定、SAN、追逐、知识边界与参考战役路径 | 不代表完整 Hosted 产品已稳定运营 |
-| Narrative | Alpha | 系统无关连续性、stdio MCP、Skills 与项目生成 | 不代表任意系统规则可自动执行 |
+| D&D 5e | Modern contract verified | 规则、内容、图片/grid、Tasks 长工具、稳定目录、stdio/HTTP 与参考战役路径 | 不代表所有 Pack 或剧情分支完整通关 |
+| CoC 7e | Modern contract verified | 调查、检定、SAN、追逐、知识边界、稳定目录、stdio/HTTP 与参考战役路径 | 不代表完整 Hosted 产品已稳定运营 |
+| Narrative | Modern contract verified | 系统无关连续性、隔离 NPC、三组原创 fixture、稳定目录、stdio/HTTP 与 Skills | 不代表任意系统规则可自动执行 |
 | Extended ruleset import | Experimental | 来源保留、解析、质量报告、索引与 Pack 校验 | 不代表可以自动理解任意商业规则书 |
 
 ## Latest progress
 
 <!-- NEWS_START -->
+
+### 2026-08-29 — Hosted 与三个领域 MCP 完成 2026-07-28 现代化
+
+SagaSmith Web 现以 durable `RoomTurnJob`、端到端幂等、quota lease、短暂 revision settlement 与 MCP receipt projection 恢复 Hosted turn；Agent 逐请求分离 requester/resource owner/acting Host 身份，只连接当前 campaign system，并把标准 MCP 媒体结果转换为 Host artifact。D&D、CoC 与 Narrative 的现代目录保持确定且私有缓存，Host 默认只向模型投影最多 16 项；legacy 仅作为显式迁移/回滚适配器。所有链路均有协议、权限、schema、错误、trace 与只读 evaluation 覆盖。
+
+**Hosted and all three domain MCPs complete the 2026-07-28 modernization** — SagaSmith Web now recovers hosted turns through durable jobs, end-to-end idempotency, quota leases, short revision settlement, and MCP receipt projections. The Agent separates requester, resource owner, and acting Host identity per request, connects only the active campaign system, and converts standard MCP media results into Host artifacts. D&D, CoC, and Narrative expose deterministic privately cacheable modern catalogs while the Host shows at most 16 tools to the model by default; legacy behavior is an explicit migration/rollback adapter. Protocol, authorization, schema, error, trace, and read-only evaluation coverage spans every path.
 
 ### 2026-08-20 — 最新运行时完成 D&D 与 CoC 并行参考战役回归
 
