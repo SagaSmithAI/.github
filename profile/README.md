@@ -138,12 +138,6 @@ uv run nanobot sagasmith start
 
 <!-- NEWS_START -->
 
-### 2026-08-29 — Hosted 与三个领域 MCP 完成 2026-07-28 现代化
-
-SagaSmith Web 现以 durable `RoomTurnJob`、端到端幂等、quota lease、短暂 revision settlement 与 MCP receipt projection 恢复 Hosted turn；Agent 逐请求分离 requester/resource owner/acting Host 身份，只连接当前 campaign system，并把标准 MCP 媒体结果转换为 Host artifact。D&D、CoC 与 Narrative 的现代目录保持确定且私有缓存，Host 默认只向模型投影最多 16 项；legacy 仅作为显式迁移/回滚适配器。所有链路均有协议、权限、schema、错误、trace 与只读 evaluation 覆盖。
-
-**Hosted and all three domain MCPs complete the 2026-07-28 modernization** — SagaSmith Web now recovers hosted turns through durable jobs, end-to-end idempotency, quota leases, short revision settlement, and MCP receipt projections. The Agent separates requester, resource owner, and acting Host identity per request, connects only the active campaign system, and converts standard MCP media results into Host artifacts. D&D, CoC, and Narrative expose deterministic privately cacheable modern catalogs while the Host shows at most 16 tools to the model by default; legacy behavior is an explicit migration/rollback adapter. Protocol, authorization, schema, error, trace, and read-only evaluation coverage spans every path.
-
 ### 2026-08-20 — 最新运行时完成 D&D 与 CoC 并行参考战役回归
 
 长回归现会从当前 Agent 与领域依赖重建托管栈，以签名身份并发运行 D&D 和 CoC 参考战役，并保存逐战役机器可读证据。
