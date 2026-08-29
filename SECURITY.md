@@ -13,6 +13,13 @@ The current default branch of each active repository receives security fixes. Ta
 - MCP stdio servers are intended for trusted local execution. Remote HTTP/SSE adapters require explicit authentication, origin policy, and network allowlists.
 - SagaSmith Web in `SagaSmith-Web` is an Internet-facing browser product and orchestration layer. Account, room, identity, object-storage, internal-service, quota, and Agent credentials must remain server-side, and every domain action must be re-authorized by the target MCP.
 - Agent-supplied principal identifiers are not trusted. Hosts must inject a principal derived from the authenticated channel, and MCP servers must enforce campaign and actor grants.
+- Browser, channel, and provider tokens must never be passed through to a domain MCP. Hosted
+  callers use short-lived, target-audience delegations that keep caller/workload, requester,
+  resource owner, acting host/character, allowed operation, room turn, base revision, and expiry
+  distinct. Each HTTP request is authorized independently.
+- A server-issued handle is an opaque state name, not a capability. Servers must bind handles to
+  an owner and expiry, re-authorize every use, and return a safe recoverable error for expired or
+  mismatched handles. Transport sessions and connection-pool identity are never authority.
 - Player-visible responses must not contain GM-only rules, scenes, hidden combatants, private actor knowledge, or another branch's state.
 - Imported PDFs, rulebooks, modules, templates, and skill assets are untrusted input. Enforce allowlisted roots, size/type limits, content-addressed storage, and provenance.
 - Never submit provider keys, bot tokens, local config files, campaign databases, Chroma stores, imported commercial content, or generated artifacts containing private play data.

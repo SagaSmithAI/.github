@@ -15,6 +15,13 @@ Local Agent Kit and SagaSmith Web integrations must use the same authoritative d
 Transport, authentication, storage, and deployment may differ; tool semantics, authority,
 revision, and idempotency may not.
 
+For MCP `2026-07-28`, keep each authorization-scoped `tools/list` deterministic and cacheable.
+The Agent host may project a small `system × phase × role × task` subset into a model turn, but
+that projection is not an authorization boundary: every domain tool call must carry a
+target-audience delegation, enumerate concrete tool IDs, and be re-authorized by the MCP server.
+Cross-call state belongs in explicit server-issued handles or explicit campaign/revision
+arguments, never in a hidden transport session.
+
 ## Before opening a change
 
 1. Open or link an issue when the change crosses repositories or alters a public contract.
