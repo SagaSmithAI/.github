@@ -2,7 +2,9 @@
 
 ## Reporting a vulnerability
 
-Do not open a public issue for vulnerabilities that could expose credentials, private campaign data, GM-only content, arbitrary files, or remote execution. Until an affected repository's Security page explicitly offers private vulnerability reporting, contact the organization through the email address published on the SagaSmithAI GitHub profile and include only the minimum details needed to establish a private channel. When GitHub private vulnerability reporting is visibly enabled for that repository, prefer it.
+Do not open a public issue for vulnerabilities that could expose credentials, private campaign data, GM-only content, arbitrary files, or remote execution. Use GitHub's **Report a vulnerability** flow on the affected repository; private vulnerability reporting is enabled for all nine active SagaSmithAI repositories. If the repository UI reports that private reporting is unavailable, contact the organization through the email address published on the SagaSmithAI GitHub profile and include only the minimum details needed to establish a private channel.
+
+Secret scanning, push protection, and Dependabot security updates are enabled on the same repositories. Provider-pattern scanning is enabled; non-provider pattern and validity checks remain disabled where the current GitHub plan does not expose them. These settings are defense-in-depth and do not replace the private reporting path.
 
 ## Supported code
 
