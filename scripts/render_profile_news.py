@@ -5,6 +5,7 @@ from __future__ import annotations
 import argparse
 import re
 from dataclasses import dataclass
+from datetime import date
 from pathlib import Path
 
 
@@ -43,6 +44,8 @@ def parse_news(path: Path) -> NewsItem:
     missing = [key for key in required if not metadata.get(key)]
     if missing:
         raise ValueError(f"missing {', '.join(missing)}: {path}")
+    if date.fromisoformat(metadata["date"]).isoformat() != metadata["date"]:
+        raise ValueError(f"date must use YYYY-MM-DD: {path}")
 
     return NewsItem(
         date=metadata["date"],
@@ -65,7 +68,9 @@ def render(items: list[NewsItem]) -> str:
 
 
 def update_profile(profile: Path, news_dir: Path, limit: int) -> bool:
-    files = sorted(news_dir.glob("*.md"), reverse=True)[:limit]
+    if limit <= 0:
+        raise ValueError("news limit must be positive")
+    files = sorted(news_dir.glob("*.md"), reverse=True)
     if not files:
         raise ValueError(f"no Markdown news files found in {news_dir}")
 
@@ -73,7 +78,8 @@ def update_profile(profile: Path, news_dir: Path, limit: int) -> bool:
     if not MARKER_RE.search(content):
         raise ValueError(f"NEWS markers not found in {profile}")
 
-    rendered = render([parse_news(path) for path in files])
+    items = sorted((parse_news(path) for path in files), key=lambda item: item.date, reverse=True)
+    rendered = render(items[:limit])
     updated = MARKER_RE.sub(lambda _match: rendered, content)
     if updated == content:
         return False

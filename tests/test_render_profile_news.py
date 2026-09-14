@@ -19,6 +19,52 @@ Long body that must not enter the Profile.
 
 
 class RenderProfileNewsTests(unittest.TestCase):
+    def test_invalid_metadata_date_preserves_profile(self) -> None:
+        with TemporaryDirectory() as directory:
+            root = Path(directory)
+            profile = root / "README.md"
+            original = "<!-- NEWS_START -->old<!-- NEWS_END -->"
+            profile.write_text(original, encoding="utf-8")
+            for value in ("2026-02-30", "20260828", "not-a-date"):
+                with self.subTest(date=value):
+                    (root / "news.md").write_text(
+                        NEWS.replace("2026-08-28", value), encoding="utf-8"
+                    )
+                    with self.assertRaises(ValueError):
+                        update_profile(profile, root, 1)
+                    self.assertEqual(profile.read_text(encoding="utf-8"), original)
+
+    def test_limit_selects_latest_metadata_date_instead_of_filename(self) -> None:
+        with TemporaryDirectory() as directory:
+            root = Path(directory)
+            profile = root / "README.md"
+            news_dir = root / "news"
+            news_dir.mkdir()
+            profile.write_text("<!-- NEWS_START -->old<!-- NEWS_END -->", encoding="utf-8")
+            (news_dir / "a-newest.md").write_text(
+                NEWS.replace("2026-08-28", "2026-09-10").replace(
+                    "English summary", "Newest summary"
+                ), encoding="utf-8",
+            )
+            (news_dir / "z-oldest.md").write_text(NEWS, encoding="utf-8")
+            update_profile(profile, news_dir, 1)
+            result = profile.read_text(encoding="utf-8")
+            self.assertIn("Newest summary", result)
+            self.assertNotIn("2026-08-28", result)
+            self.assertFalse(update_profile(profile, news_dir, 1))
+
+    def test_non_positive_limit_preserves_profile(self) -> None:
+        with TemporaryDirectory() as directory:
+            root = Path(directory)
+            profile = root / "README.md"
+            original = "<!-- NEWS_START -->old<!-- NEWS_END -->"
+            profile.write_text(original, encoding="utf-8")
+            (root / "news.md").write_text(NEWS, encoding="utf-8")
+            for limit in (0, -1):
+                with self.assertRaisesRegex(ValueError, "positive"):
+                    update_profile(profile, root, limit)
+                self.assertEqual(profile.read_text(encoding="utf-8"), original)
+
     def test_parse_requires_bilingual_summary(self) -> None:
         with TemporaryDirectory() as directory:
             path = Path(directory) / "news.md"
