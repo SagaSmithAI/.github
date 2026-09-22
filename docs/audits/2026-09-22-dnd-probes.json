@@ -1,0 +1,28 @@
+{
+  "commit": "a8ae77e0cb49c688a4525d7c77d36919f482bf57",
+  "user_data_used": false,
+  "110": {
+    "whole_first_window": [
+      "long"
+    ],
+    "segmented_first_window": [
+      "short",
+      "unarmed-strike"
+    ]
+  },
+  "107": {
+    "position_before_reaction": {
+      "x": 3,
+      "y": 0
+    },
+    "reaction_boundary": {
+      "x": 2.0,
+      "y": 0.0
+    }
+  },
+  "127": {
+    "new_empty_help_accepted": true,
+    "stored_kind": "legacy",
+    "enemy_target_bound": false
+  }
+}

@@ -1,0 +1,98 @@
+{
+  "verified_on": "2026-09-22",
+  "actions": [
+    {
+      "action": "actions/checkout@v7",
+      "exit": 0,
+      "runtime": [
+        "  using: node24\r"
+      ]
+    },
+    {
+      "action": "actions/setup-python@v7",
+      "exit": 0,
+      "runtime": [
+        "  using: 'node24'"
+      ]
+    },
+    {
+      "action": "actions/setup-node@v7",
+      "exit": 0,
+      "runtime": [
+        "  using: 'node24'"
+      ]
+    },
+    {
+      "action": "astral-sh/setup-uv@v10.0.1",
+      "exit": 0,
+      "runtime": [
+        "  using: \"node24\""
+      ]
+    },
+    {
+      "action": "astral-sh/setup-uv@v10.1.0",
+      "exit": 0,
+      "runtime": [
+        "  using: \"node24\""
+      ]
+    },
+    {
+      "action": "oven-sh/setup-bun@v2",
+      "exit": 0,
+      "runtime": [
+        "  using: \"node24\""
+      ]
+    },
+    {
+      "action": "actions/upload-pages-artifact@v5",
+      "exit": 0,
+      "runtime": [
+        "  using: composite",
+        "      uses: actions/upload-artifact@bbbca2ddaa5d8feaa63e36b76fdaad77386f024f # v7.0.0"
+      ]
+    },
+    {
+      "action": "actions/deploy-pages@v5",
+      "exit": 0,
+      "runtime": [
+        "  using: 'node24'"
+      ]
+    },
+    {
+      "action": "github/codeql-action@v4",
+      "exit": 0,
+      "runtime": [
+        "  using: node24"
+      ]
+    },
+    {
+      "action": "actions/upload-artifact@v6",
+      "exit": 0,
+      "runtime": [
+        "  using: 'node24'"
+      ]
+    },
+    {
+      "action": "actions/attest-build-provenance@v4",
+      "exit": 0,
+      "runtime": [
+        "  using: \"composite\"",
+        "      uses: actions/attest@508db95dd578ae2727ebd6217d5ba78e4fbda05d # v4.2.1"
+      ]
+    },
+    {
+      "action": "actions/upload-artifact@bbbca2ddaa5d8feaa63e36b76fdaad77386f024f",
+      "runtime": [
+        "using: node24"
+      ],
+      "verified": true
+    },
+    {
+      "action": "actions/attest@508db95dd578ae2727ebd6217d5ba78e4fbda05d",
+      "runtime": [
+        "using: node24"
+      ],
+      "verified": true
+    }
+  ]
+}
